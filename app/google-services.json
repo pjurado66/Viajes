@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1055998243830",
+    "firebase_url": "https://winter-handbook-279118.firebaseio.com",
+    "project_id": "winter-handbook-279118",
+    "storage_bucket": "winter-handbook-279118.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055998243830:android:27bbfdf0b65e7a527f0dd7",
+        "android_client_info": {
+          "package_name": "pjurado.com.viajes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055998243830-th84kabo6qs6kvdqlbqlcotdlovr6e7l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaiQbSt3GMzPxlVSkaWltNgcFM-zE99CU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055998243830-th84kabo6qs6kvdqlbqlcotdlovr6e7l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="pjurado.com.viajes.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="pjurado.com.viajes.ui.lugares.LugaresFragment"
+        android:label="@string/menu_lugares"
+        tools:layout="@layout/fragment_lugares" >
+        <action
+            android:id="@+id/action_nav_gallery_to_nuevoLugarFragment"
+            app:destination="@id/nuevoLugarFragment" />
+        <action
+            android:id="@+id/action_nav_gallery_to_editarLugarFragment"
+            app:destination="@id/editarLugarFragment" />
+        <action
+            android:id="@+id/action_nav_gallery_to_verLugarFragment"
+            app:destination="@id/verLugarFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="pjurado.com.viajes.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_perfil"
+        android:name="pjurado.com.viajes.PerfilFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil" >
+        <action
+            android:id="@+id/action_nav_perfil_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/nuevoLugarFragment"
+        android:name="pjurado.com.viajes.ui.lugares.NuevoLugarFragment"
+        android:label="Nuevo lugar"
+        tools:layout="@layout/fragment_nuevo_lugar" >
+        <action
+            android:id="@+id/action_nuevoLugarFragment_to_nav_gallery"
+            app:destination="@id/nav_gallery" />
+        <action
+            android:id="@+id/action_nuevoLugarFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="pjurado.com.viajes.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_mapsFragment_to_nuevoLugarFragment"
+            app:destination="@id/nuevoLugarFragment" >
+
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/editarLugarFragment"
+        android:name="pjurado.com.viajes.ui.lugares.EditarLugarFragment"
+        android:label="Editar lugar"
+        tools:layout="@layout/fragment_editar_lugar" >
+        <action
+            android:id="@+id/action_editarLugarFragment_to_nav_gallery"
+            app:destination="@id/nav_gallery" />
+        <action
+            android:id="@+id/action_editarLugarFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verLugarFragment"
+        android:name="pjurado.com.viajes.ui.lugares.VerLugarFragment"
+        android:label="Ver Lugar"
+        tools:layout="@layout/fragment_ver_lugar">
+        <action
+            android:id="@+id/action_verLugarFragment_to_nav_gallery"
+            app:destination="@id/nav_gallery" />
+    </fragment>
+
+
+</navigation>

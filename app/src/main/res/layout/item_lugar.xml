@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/cardview_default_elevation"
+    android:layout_marginBottom="8dp"
+    android:padding="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/primaryDistinto">
+
+        <ImageView
+            android:id="@+id/imageViewLugar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_location_city_64_green" />
+
+        <TextView
+            android:id="@+id/textViewLugar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Nombre Lugar"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/imageViewLugar"
+            app:layout_constraintTop_toTopOf="@+id/imageViewLugar" />
+
+        <TextView
+            android:id="@+id/textViewTiempo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            app:layout_constraintStart_toStartOf="@+id/textViewLugar"
+            app:layout_constraintTop_toBottomOf="@+id/textViewLugar" />
+
+        <ImageButton
+            android:id="@+id/imageButtonEditar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.483"
+            app:srcCompat="@drawable/edit" />
+
+        <ImageButton
+            android:id="@+id/imageButtonBorrar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButtonEditar"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonEditar"
+            app:layout_constraintTop_toTopOf="@+id/imageButtonEditar"
+            app:srcCompat="@drawable/borrar" />
+
+        <ImageButton
+            android:id="@+id/imageButtonVer"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButtonEditar"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonBorrar"
+            app:layout_constraintTop_toTopOf="@+id/imageButtonBorrar"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/ver" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
