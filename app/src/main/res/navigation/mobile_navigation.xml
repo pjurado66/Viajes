@@ -87,5 +87,9 @@
             app:destination="@id/nav_gallery" />
     </fragment>
 
-
+    <fragment
+        android:id="@+id/nav_viajes"
+        android:name="pjurado.com.viajes.ui.viajes.ViajesFragment"
+        android:label="Viajes"
+        tools:layout="@layout/fragment_viajes" />
 </navigation>

@@ -11,4 +11,7 @@
 
 
     <color name="primaryTextColor">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="red_500">#ff0040</color>
+
 </resources>

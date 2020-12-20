@@ -63,7 +63,7 @@ public class Login extends AppCompatActivity {
         //**********************************
         //Provisional para pruebas
         //edtemail.setText("pjolid@gmail.com");
-        //edtpass.setText("olid1901");
+        //edtpass.setText("");
         //************
         setup();
         sesion();

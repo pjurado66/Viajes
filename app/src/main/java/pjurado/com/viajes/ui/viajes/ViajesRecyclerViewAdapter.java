@@ -1,4 +1,4 @@
-package pjurado.com.viajes.ui.lugares;
+package pjurado.com.viajes.ui.viajes;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,8 +32,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import pjurado.com.viajes.R;
 import pjurado.com.viajes.modelo.Lugares;
+import pjurado.com.viajes.modelo.Viajes;
 
-public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares, LugaresRecyclerViewAdapter.ViewHolder> {
+public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, ViajesRecyclerViewAdapter.ViewHolder> {
 
 
     private Context frAct;
@@ -41,7 +42,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
    // private final OnLugaresInteractionListener mListener;
 
 
-    public LugaresRecyclerViewAdapter(FragmentActivity activity, @NonNull FirestoreRecyclerOptions<Lugares> options) {
+    public ViajesRecyclerViewAdapter(FragmentActivity activity, @NonNull FirestoreRecyclerOptions<Viajes> options) {
         super(options);
         frAct = activity;
     }
@@ -55,14 +56,14 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
 
 
     @Override
-    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull Lugares lugar) {
-        holder.mNombre.setText(lugar.getNombre());
-        holder.mTiempo.setText(lugar.getTiempoVisita() + "h");
+    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull Viajes viaje) {
+        holder.mNombre.setText(viaje.getNombre());
 
-        if (lugar.getUrlfoto() != null) {
-           if (!lugar.getUrlfoto().isEmpty()) {
+
+        if (viaje.getUrlfoto() != null) {
+           if (!viaje.getUrlfoto().isEmpty()) {
                Glide.with(frAct)
-                       .load(lugar.getUrlfoto())
+                       .load(viaje.getUrlfoto())
                        .into(holder.mFoto);
            }
         }
@@ -155,8 +156,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mNombre;
-        public final TextView mTiempo;
-        public final ImageView mFoto, mCircle, mCheck;
+        public final ImageView mFoto;
         public ImageButton btnEditar;
         public ImageButton btnBorrar;
         public ImageButton btnVer;
@@ -169,23 +169,12 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
             Log.d("ViewHolder", "Entro en constructir");
             mView = itemView;
             mNombre = (TextView) mView.findViewById(R.id.textViewViaje);
-            mTiempo = (TextView) mView.findViewById(R.id.textViewTiempo);
             mFoto = (ImageView) mView.findViewById(R.id.imageViewLugar);
-            mCircle = (ImageView) mView.findViewById(R.id.imageCircle);
-            mCheck = (ImageView) mView.findViewById(R.id.imageCheck);
             btnEditar = mView.findViewById(R.id.imageButtonEditar);
             btnBorrar = mView.findViewById(R.id.imageButtonBorrar);
             btnVer = mView.findViewById(R.id.imageButtonVer);
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mFoto.setVisibility(View.INVISIBLE);
-                    mCircle.setVisibility(View.VISIBLE);
-                    mCheck.setVisibility(View.VISIBLE);
-                    return false;
-                }
-            });
+
         }
     }
 }
