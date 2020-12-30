@@ -15,23 +15,34 @@
         android:layout_marginTop="8dp"
         android:background="@color/primaryDistinto">
 
+        <ImageView
+            android:id="@+id/imageViewViaje"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ac" />
+
         <TextView
             android:id="@+id/textViewViaje"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:text="Nombre Viaje"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewViaje"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageButtonEditar"
+            android:id="@+id/imageButtonEditarViaje"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginEnd="8dp"
@@ -43,37 +54,38 @@
             app:srcCompat="@drawable/edit" />
 
         <ImageButton
-            android:id="@+id/imageButtonBorrar"
+            android:id="@+id/imageButtonBorrarViaje"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButtonEditar"
-            app:layout_constraintEnd_toStartOf="@+id/imageButtonEditar"
-            app:layout_constraintTop_toTopOf="@+id/imageButtonEditar"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButtonEditarViaje"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonEditarViaje"
+            app:layout_constraintTop_toTopOf="@+id/imageButtonEditarViaje"
             app:srcCompat="@drawable/borrar" />
 
         <ImageButton
-            android:id="@+id/imageButtonVer"
+            android:id="@+id/imageButtonVerViaje"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButtonEditar"
-            app:layout_constraintEnd_toStartOf="@+id/imageButtonBorrar"
-            app:layout_constraintTop_toTopOf="@+id/imageButtonBorrar"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButtonEditarViaje"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonBorrarViaje"
+            app:layout_constraintTop_toTopOf="@+id/imageButtonBorrarViaje"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ver" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/imageViewAnadirLugaresAViaje"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageButtonVer"
-            app:layout_constraintTop_toTopOf="@+id/imageButtonVer"
-            app:srcCompat="@drawable/anadir" />
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonVerViaje"
+            app:layout_constraintTop_toTopOf="@+id/imageButtonVerViaje"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/anadir"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

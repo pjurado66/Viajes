@@ -50,7 +50,7 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_lugar, parent, false);
+                .inflate(R.layout.item_viaje, parent, false);
         return new ViewHolder(view);
     }
 
@@ -68,7 +68,8 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
            }
         }
 
-
+        //No se ha immpelentado
+        /*
         holder.btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +85,17 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
             }
         });
 
+         */
+        holder.btnAnadirLugares.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController((Activity) frAct, R.id.nav_host_fragment);
+                NavigationView navigationView = ((Activity) frAct).findViewById(R.id.nav_view);
+                NavigationUI.setupWithNavController(navigationView, navController);
+                navController.navigate(R.id.lugaresViajeFragment);
+            }
+        });
+
         holder.btnBorrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,14 +108,14 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK button
                         FirebaseFirestore mFirebaseFireStore= FirebaseFirestore.getInstance();
-                        DocumentSnapshot lugarDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
-                        final String id_borrar = lugarDocument.getId();
-                        mFirebaseFireStore.collection("Lugares").document(id_borrar)
+                        DocumentSnapshot viajeDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
+                        final String id_borrar = viajeDocument.getId();
+                        mFirebaseFireStore.collection("Viajes").document(id_borrar)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(frAct, "Lugar Borrado", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(frAct, "Viaje Borrado", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -131,7 +143,8 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
 
             }
         });
-
+        // No implementado el fragment
+        /*
         holder.btnVer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +159,8 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
                 navController.navigate(R.id.verLugarFragment, idLugar);
             }
         });
+
+         */
     }
 /*
     @Override
@@ -160,6 +175,7 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
         public ImageButton btnEditar;
         public ImageButton btnBorrar;
         public ImageButton btnVer;
+        public ImageButton btnAnadirLugares;
         public Lugares mItem;
 
 
@@ -169,11 +185,11 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
             Log.d("ViewHolder", "Entro en constructir");
             mView = itemView;
             mNombre = (TextView) mView.findViewById(R.id.textViewViaje);
-            mFoto = (ImageView) mView.findViewById(R.id.imageViewLugar);
-            btnEditar = mView.findViewById(R.id.imageButtonEditar);
-            btnBorrar = mView.findViewById(R.id.imageButtonBorrar);
-            btnVer = mView.findViewById(R.id.imageButtonVer);
-
+            mFoto = (ImageView) mView.findViewById(R.id.imageViewViaje);
+            btnEditar = mView.findViewById(R.id.imageButtonEditarViaje);
+            btnBorrar = mView.findViewById(R.id.imageButtonBorrarViaje);
+            btnVer = mView.findViewById(R.id.imageButtonVerViaje);
+            btnAnadirLugares = mView.findViewById((R.id.imageViewAnadirLugaresAViaje));
 
         }
     }

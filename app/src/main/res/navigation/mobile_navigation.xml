@@ -88,8 +88,33 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_viajes"
+        android:id="@+id/nuevoViajeFragment"
+        android:name="pjurado.com.viajes.ui.viajes.NuevoViajeFragment"
+        android:label="fragment_nuevo_viaje"
+        tools:layout="@layout/fragment_nuevo_viaje" >
+        <action
+            android:id="@+id/action_nuevoViajeFragment_to_viajesFragment"
+            app:destination="@id/viajesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viajesFragment"
         android:name="pjurado.com.viajes.ui.viajes.ViajesFragment"
         android:label="Viajes"
-        tools:layout="@layout/fragment_viajes" />
+        tools:layout="@layout/fragment_viajes" >
+        <action
+            android:id="@+id/action_viajesFragment_to_nuevoViajeFragment"
+            app:destination="@id/nuevoViajeFragment" />
+        <action
+            android:id="@+id/action_viajesFragment_to_lugaresViajeFragment"
+            app:destination="@id/lugaresViajeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/lugaresViajeFragment"
+        android:name="pjurado.com.viajes.ui.viajes.LugaresViajeFragment"
+        android:label="fragment_lugares_viaje_list"
+        tools:layout="@layout/fragment_lugares_viaje_list" >
+        <action
+            android:id="@+id/action_lugaresViajeFragment_to_viajesFragment"
+            app:destination="@id/viajesFragment" />
+    </fragment>
 </navigation>
