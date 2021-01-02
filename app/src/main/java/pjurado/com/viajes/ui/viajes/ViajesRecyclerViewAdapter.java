@@ -34,7 +34,8 @@ import pjurado.com.viajes.R;
 import pjurado.com.viajes.modelo.Lugares;
 import pjurado.com.viajes.modelo.Viajes;
 
-public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, ViajesRecyclerViewAdapter.ViewHolder> {
+public class ViajesRecyclerViewAdapter
+        extends FirestoreRecyclerAdapter<Viajes, ViajesRecyclerViewAdapter.ViewHolder> {
 
 
     private Context frAct;
@@ -56,7 +57,8 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
 
 
     @Override
-    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull Viajes viaje) {
+    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Viajes viaje) {
+        holder.mItem = viaje;
         holder.mNombre.setText(viaje.getNombre());
 
 
@@ -89,10 +91,16 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
         holder.btnAnadirLugares.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DocumentSnapshot viajeDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
+                final String id = viajeDocument.getId();
+                Bundle idLugar = new Bundle();
+                idLugar.putString("Id", id);
+                idLugar.putSerializable("Viaje", viaje);
+                
                 NavController navController = Navigation.findNavController((Activity) frAct, R.id.nav_host_fragment);
                 NavigationView navigationView = ((Activity) frAct).findViewById(R.id.nav_view);
                 NavigationUI.setupWithNavController(navigationView, navController);
-                navController.navigate(R.id.lugaresViajeFragment);
+                navController.navigate(R.id.lugaresViajeFragment, idLugar);
             }
         });
 
@@ -176,7 +184,7 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
         public ImageButton btnBorrar;
         public ImageButton btnVer;
         public ImageButton btnAnadirLugares;
-        public Lugares mItem;
+        public Viajes mItem;
 
 
 
@@ -192,5 +200,7 @@ public class ViajesRecyclerViewAdapter extends FirestoreRecyclerAdapter<Viajes, 
             btnAnadirLugares = mView.findViewById((R.id.imageViewAnadirLugaresAViaje));
 
         }
-    }
+
+
+}
 }

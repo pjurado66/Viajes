@@ -2,16 +2,24 @@ package pjurado.com.viajes.modelo;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Viajes {
+public class Viajes implements Serializable {
     private String nombre;
     private String descripcion;
     private String urlfoto;
-    private int orden;
+    private ArrayList<PosicionLugarEnViaje> idLugares;
 
 
+    public ArrayList<PosicionLugarEnViaje> getIdLugares() {
+        return idLugares;
+    }
 
+    public void setIdLugares(ArrayList<PosicionLugarEnViaje> idLugares) {
+        this.idLugares = idLugares;
+    }
 
     public Viajes() {
     }

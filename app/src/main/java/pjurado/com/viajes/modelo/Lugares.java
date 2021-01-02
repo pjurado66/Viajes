@@ -12,7 +12,7 @@ public class Lugares {
     private String area;
     private String parking;
     private String enlaceInformacion;
-    private List<String> viajes;
+    private String viaje;
 
 
     public Lugares() {
@@ -28,7 +28,7 @@ public class Lugares {
         this.area = area;
         this.parking = parking;
         this.enlaceInformacion = enlaceInformacion;
-        this.viajes = viajes;
+        this.viaje = viaje;
     }
 
     public String getNombre() {
@@ -103,11 +103,11 @@ public class Lugares {
         this.enlaceInformacion = enlaceInformacion;
     }
 
-    public List<String> getViajes() {
-        return viajes;
+    public String getViaje() {
+        return viaje;
     }
 
-    public void setViajes(List<String> viajes) {
-        this.viajes = viajes;
+    public void setViaje(String viaje) {
+        this.viaje = viaje;
     }
 }

@@ -166,7 +166,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
 
         public ViewHolder(View itemView) {
             super(itemView);
-            Log.d("ViewHolder", "Entro en constructir");
+
             mView = itemView;
             mNombre = (TextView) mView.findViewById(R.id.textViewViaje);
             mTiempo = (TextView) mView.findViewById(R.id.textViewTiempo);
@@ -177,15 +177,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
             btnBorrar = mView.findViewById(R.id.imageButtonBorrar);
             btnVer = mView.findViewById(R.id.imageButtonVer);
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mFoto.setVisibility(View.INVISIBLE);
-                    mCircle.setVisibility(View.VISIBLE);
-                    mCheck.setVisibility(View.VISIBLE);
-                    return false;
-                }
-            });
+
         }
     }
 }

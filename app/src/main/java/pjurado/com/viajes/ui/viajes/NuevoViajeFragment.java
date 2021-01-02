@@ -32,8 +32,10 @@ import com.google.firebase.storage.UploadTask;
 
 
 import java.io.File;
+import java.util.ArrayList;
 
 import pjurado.com.viajes.R;
+import pjurado.com.viajes.modelo.PosicionLugarEnViaje;
 import pjurado.com.viajes.modelo.Viajes;
 
 import static android.app.Activity.RESULT_OK;
@@ -117,7 +119,21 @@ public class NuevoViajeFragment extends Fragment {
         }
         viaje.setUrlfoto(uri.toString());
 
-        //viaje.setUrlfoto(subirImagen());
+        //Código de prueba para añadir la lista de lugares
+        /*
+        ArrayList<PosicionLugarEnViaje> listaLugares = new ArrayList<>();
+       PosicionLugarEnViaje lugarvisitar = new PosicionLugarEnViaje();
+       lugarvisitar.setId("iisois");
+       lugarvisitar.setPosicion(1);
+        listaLugares.add(lugarvisitar);
+
+        lugarvisitar = new PosicionLugarEnViaje();
+        lugarvisitar.setId("dddd");
+        lugarvisitar.setPosicion(2);
+        listaLugares.add(lugarvisitar);
+        viaje.setIdLugares(listaLugares);
+
+         */
 
         //Alternativa
         //mFirebaseFireStore.collection("Lugares").document().set(map);
