@@ -107,6 +107,12 @@
         <action
             android:id="@+id/action_viajesFragment_to_lugaresViajeFragment"
             app:destination="@id/lugaresViajeFragment" />
+        <action
+            android:id="@+id/action_viajesFragment_to_ordenarLugaresViajeFragment"
+            app:destination="@id/ordenarLugaresViajeFragment" />
+        <action
+            android:id="@+id/action_viajesFragment_to_rutaFragment"
+            app:destination="@id/rutaFragment" />
     </fragment>
     <fragment
         android:id="@+id/lugaresViajeFragment"
@@ -115,6 +121,24 @@
         tools:layout="@layout/fragment_lugares_viaje_list" >
         <action
             android:id="@+id/action_lugaresViajeFragment_to_viajesFragment"
+            app:destination="@id/viajesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ordenarLugaresViajeFragment"
+        android:name="pjurado.com.viajes.ui.viajes.OrdenarLugaresViajeFragment"
+        android:label="fragment_ordenar_lugares_viaje"
+        tools:layout="@layout/fragment_ordenar_lugares_viaje" >
+        <action
+            android:id="@+id/action_ordenarLugaresViajeFragment_to_viajesFragment"
+            app:destination="@id/viajesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/rutaFragment"
+        android:name="pjurado.com.viajes.ui.viajes.RutaFragment"
+        android:label="fragment_ruta"
+        tools:layout="@layout/fragment_ruta" >
+        <action
+            android:id="@+id/action_rutaFragment_to_viajesFragment"
             app:destination="@id/viajesFragment" />
     </fragment>
 </navigation>

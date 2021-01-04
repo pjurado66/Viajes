@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:maps="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mapRuta"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    maps:uiZoomControls="true"
-    maps:cameraZoom="10"
-    tools:context=".MapsFragment"/>
+    tools:context=".ui.viajes.RutaFragment" />

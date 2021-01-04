@@ -111,13 +111,16 @@ public class NuevoViajeFragment extends Fragment {
         Viajes viaje = new Viajes();
         viaje.setNombre(etNombreNuevoViaje.getText().toString());
         viaje.setDescripcion(etDescripcionNuevoViaje.getText().toString());
+
         if (uri != null) {
-            Log.d("Grabardesp", uri.toString());
+            viaje.setUrlfoto(uri.toString());
         }
         else{
-            Log.d("Grabardesp", "uri nulo");
+            viaje.setUrlfoto(null);
         }
-        viaje.setUrlfoto(uri.toString());
+
+        viaje.setIdLugares(new ArrayList<PosicionLugarEnViaje>());
+
 
         //Código de prueba para añadir la lista de lugares
         /*
@@ -154,41 +157,42 @@ public class NuevoViajeFragment extends Fragment {
     }
 
     private void subirImagen() {
-        Log.d("Foto", "entro");
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
+        if (uriImagen != null) {
+            Log.d("Foto", "entro");
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
 
-        Log.d("Foto",String.valueOf(uriImagen));
-        //final StorageReference ref = storageRef.child("images/"+file.getLastPathSegment());
-        final StorageReference ref = storageRef.child("images/"+uriImagen.getLastPathSegment());
-        Log.d("Foto","images/"+uriImagen.getLastPathSegment());
-        UploadTask uploadTask = ref.putFile(uriImagen);
+            Log.d("Foto", String.valueOf(uriImagen));
+            //final StorageReference ref = storageRef.child("images/"+file.getLastPathSegment());
+            final StorageReference ref = storageRef.child("images/" + uriImagen.getLastPathSegment());
+            Log.d("Foto", "images/" + uriImagen.getLastPathSegment());
+            UploadTask uploadTask = ref.putFile(uriImagen);
 
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
                 }
-
-                // Continue with the task to get the download URL
-                return ref.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    uri = task.getResult();
-                    Log.d("Grabar", uri.toString());
-                    grabarViaje();
-                } else {
-                    // Handle failures
-                    // ...
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        uri = task.getResult();
+                        Log.d("Grabar", uri.toString());
+                        grabarViaje();
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
                 }
-            }
-        });
+            });
 
-
+        }
 
 /*
 // Register observers to listen for when the download is done or if it fails
@@ -239,7 +243,7 @@ public class NuevoViajeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 subirImagen();
-
+                grabarViaje();
 
                 Navigation.findNavController(v).navigate(R.id.viajesFragment);
             }

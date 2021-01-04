@@ -104,71 +104,46 @@ public class ViajesRecyclerViewAdapter
             }
         });
 
+        //PARA ORDENAR LUGARES HAY QUE CAMBIARLO
         holder.btnBorrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder((Activity) frAct);
-
-                builder.setMessage("¿Esta seguro de borrar " + holder.mNombre.getText() + "?")
-                        .setTitle("Borrar lugar");
-                // Add the buttons
-                builder.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-                        FirebaseFirestore mFirebaseFireStore= FirebaseFirestore.getInstance();
-                        DocumentSnapshot viajeDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
-                        final String id_borrar = viajeDocument.getId();
-                        mFirebaseFireStore.collection("Viajes").document(id_borrar)
-                                .delete()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(frAct, "Viaje Borrado", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("Borrado", "Error deleting document", e);
-                                    }
-                                });
 
 
-                    }
-                });
-                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
-                // Set other dialog properties
+                DocumentSnapshot viajeDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
+                final String id = viajeDocument.getId();
+                Bundle idViaje = new Bundle();
+                idViaje.putString("Id", id);
+                idViaje.putSerializable("Viaje", viaje);
 
-
-                // Create the AlertDialog
-                AlertDialog dialog = builder.create();
-                builder.show();
+                NavController navController = Navigation.findNavController((Activity) frAct, R.id.nav_host_fragment);
+                NavigationView navigationView = ((Activity) frAct).findViewById(R.id.nav_view);
+                //NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+                NavigationUI.setupWithNavController(navigationView, navController);
+                navController.navigate(R.id.ordenarLugaresViajeFragment, idViaje);
 
 
             }
         });
         // No implementado el fragment
-        /*
+
         holder.btnVer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DocumentSnapshot lugarDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
-                final String id = lugarDocument.getId();
-                Bundle idLugar = new Bundle();
-                idLugar.putString("Id", id);
+
+                Bundle idViaje = new Bundle();
+                idViaje.putSerializable("Viaje", viaje);
+
+
                 NavController navController = Navigation.findNavController((Activity) frAct, R.id.nav_host_fragment);
                 NavigationView navigationView = ((Activity) frAct).findViewById(R.id.nav_view);
                 //NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
                 NavigationUI.setupWithNavController(navigationView, navController);
-                navController.navigate(R.id.verLugarFragment, idLugar);
+                navController.navigate(R.id.rutaFragment, idViaje);
             }
         });
 
-         */
+
     }
 /*
     @Override

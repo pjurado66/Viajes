@@ -62,7 +62,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/imageButtonEditarViaje"
             app:layout_constraintEnd_toStartOf="@+id/imageButtonEditarViaje"
             app:layout_constraintTop_toTopOf="@+id/imageButtonEditarViaje"
-            app:srcCompat="@drawable/borrar" />
+            app:srcCompat="@drawable/ordenar" />
 
         <ImageButton
             android:id="@+id/imageButtonVerViaje"
