@@ -1,5 +1,6 @@
 package pjurado.com.viajes.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Lugares {
@@ -9,25 +10,49 @@ public class Lugares {
     private String urlfoto;
     private String latitud;
     private String longitud;
-    private String area;
-    private String parking;
-    private String enlaceInformacion;
+    private ArrayList<String> areas;
+    private ArrayList<String> parking;
+    private ArrayList<String> informacion;
     private String viaje;
 
 
     public Lugares() {
     }
 
-    public Lugares(String nombre, String descripcion, String tiempoVisita, String urlfoto, String latitud, String longitud, String area, String parking, String enlaceInformacion, List<String> viajes) {
+    public ArrayList<String> getAreas() {
+        return areas;
+    }
+
+    public void setAreas(ArrayList<String> areas) {
+        this.areas = areas;
+    }
+
+    public ArrayList<String> getParking() {
+        return parking;
+    }
+
+    public void setParking(ArrayList<String> parking) {
+        this.parking = parking;
+    }
+
+    public ArrayList<String> getInformacion() {
+        return informacion;
+    }
+
+    public void setInformacion(ArrayList<String> informacion) {
+        this.informacion = informacion;
+    }
+
+    public Lugares(String nombre, String descripcion, String tiempoVisita, String urlfoto, String latitud, String longitud, ArrayList<String> areas, ArrayList<String> parking, ArrayList<String> informacion, String viaje) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.tiempoVisita = tiempoVisita;
         this.urlfoto = urlfoto;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.area = area;
+        this.areas = areas;
         this.parking = parking;
-        this.enlaceInformacion = enlaceInformacion;
+        this.informacion = informacion;
         this.viaje = viaje;
     }
 
@@ -77,30 +102,6 @@ public class Lugares {
 
     public void setLongitud(String longitud) {
         this.longitud = longitud;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getParking() {
-        return parking;
-    }
-
-    public void setParking(String parking) {
-        this.parking = parking;
-    }
-
-    public String getEnlaceInformacion() {
-        return enlaceInformacion;
-    }
-
-    public void setEnlaceInformacion(String enlaceInformacion) {
-        this.enlaceInformacion = enlaceInformacion;
     }
 
     public String getViaje() {

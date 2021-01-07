@@ -67,7 +67,7 @@ public class EditarLugarFragment extends Fragment {
         etNombre = (TextView) view.findViewById(R.id.texttViewVerLugarNombre);
         etDecripcion = (TextView) view.findViewById(R.id.texttViewVerLugarDescripcion);
         etTiempoVisita = (TextView) view.findViewById(R.id.editTextEditarLugarTiempoVisita);
-        etUrlFoto = (TextView) view.findViewById(R.id.editTextEditarLugarUrlFoto);
+        etUrlFoto = (TextView) view.findViewById(R.id.imageViewNuevoLugarFoto);
         etLatitud= (TextView) view.findViewById(R.id.editTextLatitud);
         etLongitud = (TextView) view.findViewById(R.id.editTextLongitud);
         etUrlArea = (TextView) view.findViewById(R.id.editTextArea);
@@ -114,9 +114,9 @@ public class EditarLugarFragment extends Fragment {
                     etUrlFoto.setText(lugar.getUrlfoto());
                     etLatitud.setText(lugar.getLatitud());
                     etLongitud.setText(lugar.getLongitud());
-                    etUrlArea.setText(lugar.getArea());
-                    etUrlParking.setText(lugar.getParking());
-                    etUrlInfo.setText(lugar.getEnlaceInformacion());
+                    //etUrlArea.setText(lugar.getArea());
+                    //etUrlParking.setText(lugar.getParking());
+                    //etUrlInfo.setText(lugar.getEnlaceInformacion());
                 }
             }
         });
@@ -138,9 +138,9 @@ public class EditarLugarFragment extends Fragment {
         lugar.setUrlfoto(etUrlFoto.getText().toString());
         lugar.setLatitud(etLatitud.getText().toString());
         lugar.setLongitud(etLongitud.getText().toString());
-        lugar.setArea(etUrlArea.getText().toString());
-        lugar.setParking(etUrlParking.getText().toString());
-        lugar.setEnlaceInformacion(etLongitud.getText().toString());
+        //lugar.setArea(etUrlArea.getText().toString());
+        //lugar.setParking(etUrlParking.getText().toString());
+        //lugar.setEnlaceInformacion(etLongitud.getText().toString());
 
 
 

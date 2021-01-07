@@ -2,13 +2,20 @@ package pjurado.com.viajes.ui.viajes;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,6 +65,39 @@ public class RutaFragment extends Fragment {
          */
         @Override
         public void onMapReady(final GoogleMap googleMap) {
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            //googleMap.getUiSettings().setMapToolbarEnabled(true);
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(getActivity(), "Sin permisos", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
+            }
+            else{
+                Toast.makeText(getActivity(), "Permisos recibidos", Toast.LENGTH_SHORT).show();
+
+
+            }
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(getActivity(), "Sin permisos", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+            }
+            else{
+                Toast.makeText(getActivity(), "Permisos recibidos", Toast.LENGTH_SHORT).show();
+
+
+            }
+
+
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location location) {
+
+                }
+            });
             for (int i = 0; i < viaje.getIdLugares().size(); i++) {
 
 
@@ -139,10 +180,16 @@ public class RutaFragment extends Fragment {
         public View onCreateView(@NonNull LayoutInflater inflater,
                                  @Nullable ViewGroup container,
                                  @Nullable Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_ruta, container, false);
 
             viaje = (Viajes) getArguments().getSerializable("Viaje");
+           ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Mapa del viaje a "+ viaje.getNombre());
+
             mFirebaseFireStore = FirebaseFirestore.getInstance();
-            return inflater.inflate(R.layout.fragment_ruta, container, false);
+
+            FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+            fab.hide();
+            return view;
         }
 
         @Override
@@ -150,6 +197,7 @@ public class RutaFragment extends Fragment {
             super.onViewCreated(view, savedInstanceState);
             SupportMapFragment mapFragment =
                     (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapRuta);
+
             if (mapFragment != null) {
                 mapFragment.getMapAsync(callback);
             }
