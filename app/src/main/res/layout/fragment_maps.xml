@@ -8,4 +8,4 @@
     android:layout_height="match_parent"
     maps:uiZoomControls="true"
     maps:cameraZoom="10"
-    tools:context=".MapsFragment"/>
+    tools:context=".ui.lugares.MapsFragment"/>

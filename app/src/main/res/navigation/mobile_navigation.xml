@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="pjurado.com.viajes.MapsFragment"
+        android:name="pjurado.com.viajes.ui.lugares.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" >
         <action

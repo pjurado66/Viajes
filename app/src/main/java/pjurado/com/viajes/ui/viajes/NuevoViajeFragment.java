@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -102,7 +103,7 @@ public class NuevoViajeFragment extends Fragment {
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.hide();
         //fab.setImageResource(R.drawable.grabar);
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Nuevo viaje");
 
         return inflater.inflate(R.layout.fragment_nuevo_viaje, container, false);
     }
@@ -121,25 +122,6 @@ public class NuevoViajeFragment extends Fragment {
 
         viaje.setIdLugares(new ArrayList<PosicionLugarEnViaje>());
 
-
-        //Código de prueba para añadir la lista de lugares
-        /*
-        ArrayList<PosicionLugarEnViaje> listaLugares = new ArrayList<>();
-       PosicionLugarEnViaje lugarvisitar = new PosicionLugarEnViaje();
-       lugarvisitar.setId("iisois");
-       lugarvisitar.setPosicion(1);
-        listaLugares.add(lugarvisitar);
-
-        lugarvisitar = new PosicionLugarEnViaje();
-        lugarvisitar.setId("dddd");
-        lugarvisitar.setPosicion(2);
-        listaLugares.add(lugarvisitar);
-        viaje.setIdLugares(listaLugares);
-
-         */
-
-        //Alternativa
-        //mFirebaseFireStore.collection("Lugares").document().set(map);
         mFirebaseFireStore= FirebaseFirestore.getInstance();
         mFirebaseFireStore.collection("Viajes").add(viaje).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
@@ -194,29 +176,7 @@ public class NuevoViajeFragment extends Fragment {
 
         }
 
-/*
-// Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Log.d("Foto", "Fallo");
 
-                Toast.makeText(getActivity(), "Fallo subir foto", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getActivity(), "Foto subida", Toast.LENGTH_SHORT).show();
-                Log.d("Foto", "Grabada");
-                url[0] = ref.getDownloadUrl();
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-            }
-        });
-        return url[0];
-
- */
     }
 
 
@@ -242,9 +202,12 @@ public class NuevoViajeFragment extends Fragment {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                subirImagen();
-                grabarViaje();
-
+                if (uriImagen != null) {
+                    subirImagen();
+                }
+                else {
+                    grabarViaje();
+                }
                 Navigation.findNavController(v).navigate(R.id.viajesFragment);
             }
         });

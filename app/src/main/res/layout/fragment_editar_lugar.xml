@@ -59,12 +59,17 @@
 
 
             <ImageView
-                android:id="@+id/imageViewFotoNuevoLugar"
+                android:id="@+id/imageViewFotoLugar"
                 android:layout_width="400dp"
                 android:layout_height="250dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ac"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextEditarLugarTiempoVisita" />
 
@@ -74,13 +79,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="24dp"
                 android:background="@color/fondo"
-                android:src="@drawable/grabar"
+                android:src="@drawable/grabar40"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.534"
+                app:layout_constraintHorizontal_bias="0.516"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextInfo" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextLongitud" />
 
             <EditText
                 android:id="@+id/editTextLatitud"
@@ -93,7 +98,7 @@
                 android:hint="Latitud"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewNuevoLugarFoto" />
+                app:layout_constraintTop_toBottomOf="@+id/imageViewFotoLugar" />
 
             <EditText
                 android:id="@+id/editTextLongitud"
@@ -101,51 +106,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="Longitud"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toEndOf="@+id/editTextLatitud"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewNuevoLugarFoto" />
-
-            <EditText
-                android:id="@+id/editTextArea"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="URL Área"
-                android:inputType="textPersonName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextLongitud" />
-
-            <EditText
-                android:id="@+id/editTextParking"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="URL Parking"
-                android:inputType="textPersonName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextArea" />
-
-            <EditText
-                android:id="@+id/editTextInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="URL Info"
-                android:inputType="textPersonName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextParking" />
+                app:layout_constraintTop_toTopOf="@+id/editTextLatitud" />
 
             <ImageButton
                 android:id="@+id/imageButtonMapa"
@@ -153,7 +118,7 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:src="@drawable/ic_baseline_map_64"
+                android:src="@drawable/mapa_cuadrado"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/editTextLongitud" />
 

@@ -11,6 +11,7 @@
 
 
     <LinearLayout
+        android:id="@+id/spinnerInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -121,8 +122,155 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageViewFoto" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/acme"
+                    android:text="Áreas"
+                    android:textColor="@color/colorPrimaryDark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/container" />
+
+                <Spinner
+                    android:id="@+id/spinnerAreas"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView5"
+                    app:layout_constraintStart_toStartOf="@+id/spinnerParking"
+                    app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonArea"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ver_cuadrado"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinnerAreas"
+                    app:layout_constraintStart_toEndOf="@+id/spinnerAreas"
+                    app:layout_constraintTop_toTopOf="@+id/spinnerAreas" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/acme"
+                    android:text="Parkings"
+                    android:textColor="@color/colorPrimaryDark"
+                    app:layout_constraintStart_toStartOf="@+id/textView5"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+                <Spinner
+                    android:id="@+id/spinnerParking"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                    app:layout_constraintStart_toStartOf="@+id/spinnerInfos"
+                    app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonParking"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ver_cuadrado"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinnerParking"
+                    app:layout_constraintStart_toEndOf="@+id/spinnerParking"
+                    app:layout_constraintTop_toTopOf="@+id/spinnerParking" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/acme"
+                    android:text="Información"
+                    android:textColor="@color/colorPrimaryDark"
+                    app:layout_constraintStart_toStartOf="@+id/textView6"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                <Spinner
+                    android:id="@+id/spinnerInfos"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView7"
+                    app:layout_constraintStart_toEndOf="@+id/textView7"
+                    app:layout_constraintTop_toTopOf="@+id/textView7" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonInfo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ver_cuadrado"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinnerInfos"
+                    app:layout_constraintStart_toEndOf="@+id/spinnerInfos"
+                    app:layout_constraintTop_toTopOf="@+id/spinnerInfos" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonParkingMapa"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/mapa_cuadrado"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageButtonParking"
+                    app:layout_constraintStart_toEndOf="@+id/imageButtonParking"
+                    app:layout_constraintTop_toTopOf="@+id/imageButtonParking" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonAreaMapa"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/mapa_cuadrado"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageButtonArea"
+                    app:layout_constraintStart_toEndOf="@+id/imageButtonArea"
+                    app:layout_constraintTop_toTopOf="@+id/imageButtonArea" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonAreaBorra"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/borrar_cuadrado"
+                    app:layout_constraintStart_toEndOf="@+id/imageButtonAreaMapa"
+                    app:layout_constraintTop_toTopOf="@+id/imageButtonAreaMapa" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonParkingBorra"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/borrar_cuadrado"
+                    app:layout_constraintStart_toEndOf="@+id/imageButtonParkingMapa"
+                    app:layout_constraintTop_toTopOf="@+id/imageButtonParkingMapa" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonInfoBorra"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/borrar_cuadrado"
+                    app:layout_constraintStart_toEndOf="@+id/imageButtonParkingMapa"
+                    app:layout_constraintStart_toStartOf="@+id/imageButtonParkingBorra"
+                    app:layout_constraintTop_toTopOf="@+id/imageButtonInfo" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
+
     </LinearLayout>
 
 

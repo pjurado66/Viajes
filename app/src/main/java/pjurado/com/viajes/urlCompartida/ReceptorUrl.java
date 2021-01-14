@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -33,17 +35,22 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import pjurado.com.viajes.Login;
 import pjurado.com.viajes.R;
+import pjurado.com.viajes.modelo.AreasyParkings;
 import pjurado.com.viajes.modelo.Lugares;
 import pjurado.com.viajes.modelo.Viajes;
 
 public class ReceptorUrl extends AppCompatActivity {
     private RecyclerView rvLugares;
-    //private  SeleccionarLugarRecyclerViewAdapter adapter;
+
     private FirebaseFirestore miFirebase;
     private String idViajeSeleccionado;
     private String idLugarSeleccionado;
@@ -60,47 +67,42 @@ public class ReceptorUrl extends AppCompatActivity {
     private Spinner spnViajes;
 
     private ImageButton btnSalvar;
+
+    private String texto, titulo, lat, lon;
+    private CheckBox checkBox;
+
+    private Boolean esEditable = false;
+    private AreasyParkings areaParking;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receptor_url);
-
+        checkBox = findViewById(R.id.checkBox);
 
         miFirebase = FirebaseFirestore.getInstance();
         nombreLugares.clear();
         nombreViajes.clear();
         sesion();
         llenarSpinnerViajes();
-/*
-        miFirebase.collection("Lugares")
-                .orderBy("nombre")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
 
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG", document.getId() + " => " + document.getData());
-                                Lugares lugar = document.toObject(Lugares.class);
-                                nombreLugares.add((document.toObject(Lugares.class)).getNombre());
-                                idLugares.add(document.getId());
-                                //documentSnapshot.toObject(City.class);
-
-                            }
-                            creaSpinnerLugares();
-                        } else {
-                            Log.d("TAG", "Error getting documents: ", task.getException());
-                        }
-
-                    }
-                });
-*/
         creaSpinnerTipos();
-        urlCompartido  = getIntent().getStringExtra(Intent.EXTRA_TEXT);
-        WebView miVisorWeb = (WebView) findViewById(R.id.visorWeb);
+        String textorecibido  = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        if (textorecibido.indexOf("park4night") > -1) {
+            urlCompartido = extraerUrl(textorecibido);
+            checkBox.setEnabled(true);
+            esEditable = true;
+        }
+        else{
+            urlCompartido = textorecibido;
+        }
 
+
+        WebView miVisorWeb = (WebView) findViewById(R.id.visorWeb);
         miVisorWeb.loadUrl(urlCompartido);
+
+
+        new doIT().execute();
 
         btnSalvar = findViewById(R.id.salvarEnlace);
         btnSalvar.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +112,14 @@ public class ReceptorUrl extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private String extraerUrl(String textorecibido) {
+        String cadena = textorecibido.substring(13);
+        cadena = cadena.trim();
+        int i = cadena.indexOf(' ');
+        cadena = cadena.substring(0, i);
+        return cadena;
     }
 
     private void llenarSpinnerViajes() {
@@ -200,17 +210,22 @@ public class ReceptorUrl extends AppCompatActivity {
                 DocumentReference docViaje = miFirebase.collection("Lugares").document(idLugarSeleccionado);
                 switch (tipoSeleccionado) {
                     case 0:
-                        lugar.getAreas().add(urlCompartido);
+                        lugar.getAreas().add(areaParking);
                         docViaje.update("areas", lugar.getAreas());
                         break;
                     case 1:
-                        lugar.getParking().add(urlCompartido);
+                        lugar.getParking().add(areaParking);
                         docViaje.update("parking", lugar.getParking());
                         break;
                     case 2:
-                        lugar.getInformacion().add(urlCompartido);
+                        //lugar.getInformacion().add(urlCompartido);
+                        lugar.getInformacion().add(areaParking);
                         docViaje.update("informacion", lugar.getInformacion());
                         break;
+                }
+                if (checkBox.isChecked()){
+                    docViaje.update("latitud", lat);
+                    docViaje.update("longitud", lon);
                 }
 
 
@@ -288,5 +303,45 @@ public class ReceptorUrl extends AppCompatActivity {
 
     }
 
+    public class doIT extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
 
+            try {
+                Document document = Jsoup.connect(urlCompartido).get();
+                texto = document.text();
+                titulo = document.title();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //document.text();
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (urlCompartido.indexOf("park4night") > -1) {
+                coordenadas();
+            }
+            else{
+                lat = "";
+                lon = "";
+            }
+            areaParking = new AreasyParkings(urlCompartido, esEditable, titulo, lat, lon);
+        }
+
+        private void coordenadas() {
+            texto = texto.substring(texto.indexOf("GPS"));
+            texto = texto.substring(texto.indexOf("”")+1);
+            texto = texto.substring(texto.indexOf("”")+1);
+            lat = texto.substring(1,texto.indexOf(","));
+            Log.d("GPS", lat);
+            texto = texto.substring(texto.indexOf(",")+1);
+
+            lon = texto.substring(0, texto.indexOf(" "));
+
+            Log.d("GPS", lon);
+        }
+    }
 }

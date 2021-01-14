@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +33,8 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 
 import pjurado.com.viajes.R;
+import pjurado.com.viajes.modelo.AreasyParkings;
 import pjurado.com.viajes.modelo.Lugares;
-import pjurado.com.viajes.modelo.PosicionLugarEnViaje;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -45,7 +43,6 @@ public class NuevoLugarFragment extends Fragment {
     private TextView etNombre;
     private TextView etDecripcion;
     private TextView etTiempoVisita;
-    private ImageView iVFoto;
     private ImageView ivFotoLugar;
     private TextView etLatitud;
     private TextView etLongitud;
@@ -87,12 +84,9 @@ public class NuevoLugarFragment extends Fragment {
         etDecripcion = (TextView) view.findViewById(R.id.texttViewVerLugarDescripcion);
         etTiempoVisita = (TextView) view.findViewById(R.id.editTextEditarLugarTiempoVisita);
 
-        ivFotoLugar = view.findViewById(R.id.imageViewFotoNuevoLugar);
+        ivFotoLugar = (ImageView) view.findViewById(R.id.imageViewNuevoLugarFoto);
         etLatitud= (TextView) view.findViewById(R.id.editTextLatitud);
         etLongitud = (TextView) view.findViewById(R.id.editTextLongitud);
-        etUrlArea = (TextView) view.findViewById(R.id.editTextArea);
-        etUrlParking = (TextView) view.findViewById(R.id.editTextParking);
-        etUrlInfo = (TextView) view.findViewById(R.id.editTextInfo);
         btMapa = (ImageButton) view.findViewById(R.id.imageButtonMapa);
         btSalvar = (ImageButton) view.findViewById(R.id.imageButtonNuevoLugarSalvar);
 
@@ -120,13 +114,15 @@ public class NuevoLugarFragment extends Fragment {
         });
 
 
-
-
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                subirImagen();
-                //grabarLugar();
+                if (uriImagen != null) {
+                    subirImagen();
+                }
+                else{
+                    grabarLugar();
+                }
                 Navigation.findNavController(v).navigate(R.id.nav_gallery);
             }
         });
@@ -175,21 +171,13 @@ public class NuevoLugarFragment extends Fragment {
             case 0:
                 if (resultCode == RESULT_OK) {
                     uriImagen = data.getData();
-                    iVFoto.setImageURI(uriImagen);
+                    ivFotoLugar.setImageURI(uriImagen);
                 }
                 break;
         }
     }
 
     public void grabarLugar(){
-        /* Añadir mediante mapas
-        Map<String, Object> map = new HashMap<>();
-        map.put("nombre", etNombre.getText().toString());
-        map.put("descripcion", etDecripcion.getText().toString());
-        map.put("tiempoVisita", etTiempoVisita.getText().toString());
-        map.put("urlFoto", etUrlFoto.getText().toString());
-
-         */
         Lugares lugar = new Lugares();
         lugar.setNombre(etNombre.getText().toString());
         lugar.setDescripcion(etDecripcion.getText().toString());
@@ -197,9 +185,9 @@ public class NuevoLugarFragment extends Fragment {
 
         lugar.setLatitud(etLatitud.getText().toString());
         lugar.setLongitud(etLongitud.getText().toString());
-        lugar.setAreas(new ArrayList<String>());
-        lugar.setInformacion(new ArrayList<String>());
-        lugar.setParking(new ArrayList<String>());
+        lugar.setAreas(new ArrayList<AreasyParkings>());
+        lugar.setInformacion(new ArrayList<AreasyParkings>());
+        lugar.setParking(new ArrayList<AreasyParkings>());
 
 
         if (uri != null) {
@@ -209,13 +197,6 @@ public class NuevoLugarFragment extends Fragment {
             lugar.setUrlfoto(null);
         }
 
-
-        //lugar.setArea(etUrlArea.getText().toString());
-        //lugar.setParking(etUrlParking.getText().toString());
-        //lugar.setEnlaceInformacion(etLongitud.getText().toString());
-
-        //Alternativa
-        //mFirebaseFireStore.collection("Lugares").document().set(map);
 
         mFirebaseFireStore.collection("Lugares").add(lugar).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

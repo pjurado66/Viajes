@@ -1,4 +1,4 @@
-package pjurado.com.viajes;
+package pjurado.com.viajes.ui.lugares;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,13 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+
+import pjurado.com.viajes.R;
+import pjurado.com.viajes.modelo.AreasyParkings;
+import pjurado.com.viajes.modelo.Lugares;
 
 public class MapsFragment extends Fragment {
 
@@ -26,6 +37,9 @@ public class MapsFragment extends Fragment {
     private String titulo;
     private LatLng lugar;
     private Marker marcador;
+    private String id;
+    private ArrayList<AreasyParkings> areas;
+    private ArrayList<AreasyParkings> parkings;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -55,7 +69,29 @@ public class MapsFragment extends Fragment {
 
             marcador = googleMap.addMarker(new MarkerOptions().position(lugar).title(titulo));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(lugar));
+            if (areas != null) {
+                for (int i = 0; i < areas.size(); i++) {
+                    if (areas.get(i).getEsExtraible()) {
+                        lugar = new LatLng(Double.parseDouble(areas.get(i).getLatitud()), Double.parseDouble(areas.get(i).getLongitud()));
+                        marcador = googleMap.addMarker(new MarkerOptions().
+                                position(lugar).
+                                title(areas.get(i).getTitulo())
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.area_p)));
+                    }
+                }
+            }
 
+            if (parkings != null) {
+                for (int i = 0; i < parkings.size(); i++) {
+                    if (parkings.get(i).getEsExtraible()) {
+                        lugar = new LatLng(Double.parseDouble(parkings.get(i).getLatitud()), Double.parseDouble(parkings.get(i).getLongitud()));
+                        marcador = googleMap.addMarker(new MarkerOptions().
+                                position(lugar).
+                                title(parkings.get(i).getTitulo())
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.parking_p)));
+                    }
+                }
+            }
             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
@@ -76,6 +112,8 @@ public class MapsFragment extends Fragment {
         latitud = getArguments().getString("Latitud");
         longitud = getArguments().getString("Longitud");
         titulo = getArguments().getString("Titulo");
+        id = getArguments().getString("Id");
+        recuperarDatosLugar();
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -93,4 +131,21 @@ public class MapsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
+
+    public void recuperarDatosLugar(){
+        FirebaseFirestore mFirebaseFireStore = FirebaseFirestore.getInstance();
+        mFirebaseFireStore.collection("Lugares").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    Lugares lugar = documentSnapshot.toObject(Lugares.class);
+                    areas = lugar.getAreas();
+                    parkings = lugar.getParking();
+                }
+            }
+        });
+    }
+
+
 }

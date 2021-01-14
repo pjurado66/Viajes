@@ -42,8 +42,10 @@ public class LugaresViajeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_lugares_viaje_list, container, false);
         //getActivity().getActionBar().setTitle("Nuevo lugar");
+
         String id = getArguments().getString("Id");
         Viajes viaje = (Viajes) getArguments().getSerializable("Viaje");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Añadir lugares al viaje a "+ viaje.getNombre());
         ArrayList<PosicionLugarEnViaje> lugaresEnViaje = new ArrayList<>();
         lugaresEnViaje = viaje.getIdLugares();
         if (root instanceof RecyclerView) {

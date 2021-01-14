@@ -10,40 +10,40 @@ public class Lugares {
     private String urlfoto;
     private String latitud;
     private String longitud;
-    private ArrayList<String> areas;
-    private ArrayList<String> parking;
-    private ArrayList<String> informacion;
+    private ArrayList<AreasyParkings> areas;
+    private ArrayList<AreasyParkings> parking;
+    private ArrayList<AreasyParkings> informacion;
     private String viaje;
 
 
     public Lugares() {
     }
 
-    public ArrayList<String> getAreas() {
+    public ArrayList<AreasyParkings> getAreas() {
         return areas;
     }
 
-    public void setAreas(ArrayList<String> areas) {
+    public void setAreas(ArrayList<AreasyParkings> areas) {
         this.areas = areas;
     }
 
-    public ArrayList<String> getParking() {
+    public ArrayList<AreasyParkings> getParking() {
         return parking;
     }
 
-    public void setParking(ArrayList<String> parking) {
+    public void setParking(ArrayList<AreasyParkings> parking) {
         this.parking = parking;
     }
 
-    public ArrayList<String> getInformacion() {
+    public ArrayList<AreasyParkings> getInformacion() {
         return informacion;
     }
 
-    public void setInformacion(ArrayList<String> informacion) {
+    public void setInformacion(ArrayList<AreasyParkings> informacion) {
         this.informacion = informacion;
     }
 
-    public Lugares(String nombre, String descripcion, String tiempoVisita, String urlfoto, String latitud, String longitud, ArrayList<String> areas, ArrayList<String> parking, ArrayList<String> informacion, String viaje) {
+    public Lugares(String nombre, String descripcion, String tiempoVisita, String urlfoto, String latitud, String longitud, ArrayList<AreasyParkings> areas, ArrayList<AreasyParkings> parking, ArrayList<AreasyParkings> informacion, String viaje) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.tiempoVisita = tiempoVisita;

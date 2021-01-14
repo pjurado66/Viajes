@@ -1,10 +1,13 @@
 package pjurado.com.viajes.ui.lugares;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,30 +16,38 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import pjurado.com.viajes.R;
 import pjurado.com.viajes.modelo.Lugares;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class EditarLugarFragment extends Fragment {
     private TextView etNombre;
     private TextView etDecripcion;
     private TextView etTiempoVisita;
-    private TextView etUrlFoto;
     private TextView etLatitud;
     private TextView etLongitud;
-    private TextView etUrlArea;
-    private TextView etUrlParking;
-    private TextView etUrlInfo;
+    private ImageView ivFotoLugar;
     private ImageButton btMapa;
     private ImageButton btSalvar;
     FirebaseFirestore mFirebaseFireStore;
     private String id;
     private Lugares lugar;
+    private Uri uriImagen;
+    private Uri uri;
 
     public EditarLugarFragment() {
         // Required empty public constructor
@@ -67,12 +78,9 @@ public class EditarLugarFragment extends Fragment {
         etNombre = (TextView) view.findViewById(R.id.texttViewVerLugarNombre);
         etDecripcion = (TextView) view.findViewById(R.id.texttViewVerLugarDescripcion);
         etTiempoVisita = (TextView) view.findViewById(R.id.editTextEditarLugarTiempoVisita);
-        etUrlFoto = (TextView) view.findViewById(R.id.imageViewNuevoLugarFoto);
+        ivFotoLugar = (ImageView) view.findViewById(R.id.imageViewFotoLugar);
         etLatitud= (TextView) view.findViewById(R.id.editTextLatitud);
         etLongitud = (TextView) view.findViewById(R.id.editTextLongitud);
-        etUrlArea = (TextView) view.findViewById(R.id.editTextArea);
-        etUrlParking = (TextView) view.findViewById(R.id.editTextParking);
-        etUrlInfo = (TextView) view.findViewById(R.id.editTextInfo);
         btMapa = (ImageButton) view.findViewById(R.id.imageButtonMapa);
         btSalvar = (ImageButton) view.findViewById(R.id.imageButtonEditarLugarSalvar);
 
@@ -92,14 +100,75 @@ public class EditarLugarFragment extends Fragment {
             }
         });
 
+        ivFotoLugar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 0);
+            }
+        });
+
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                grabarLugar();
+                if (uriImagen!= null && lugar.getUrlfoto() != uriImagen.toString()) {
+                    subirImagen();
+                }
+                else{
+                    grabarLugar();
+                }
                 Navigation.findNavController(v).navigate(R.id.nav_gallery);
             }
         });
 
+    }
+    private void subirImagen() {
+        if (uriImagen != null) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+
+            final StorageReference ref = storageRef.child("images/" + uriImagen.getLastPathSegment());
+            UploadTask uploadTask = ref.putFile(uriImagen);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        uri = task.getResult();
+                        grabarLugar();
+                    } else {
+                        // Handle failures
+                        // ...
+                    }
+                }
+            });
+
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    uriImagen = data.getData();
+                    ivFotoLugar.setImageURI(uriImagen);
+                }
+                break;
+        }
     }
 
     public void recuperarDatosLugar(){
@@ -111,54 +180,43 @@ public class EditarLugarFragment extends Fragment {
                     etNombre.setText(lugar.getNombre());
                     etDecripcion.setText(lugar.getDescripcion());
                     etTiempoVisita.setText(lugar.getTiempoVisita());
-                    etUrlFoto.setText(lugar.getUrlfoto());
                     etLatitud.setText(lugar.getLatitud());
                     etLongitud.setText(lugar.getLongitud());
-                    //etUrlArea.setText(lugar.getArea());
-                    //etUrlParking.setText(lugar.getParking());
-                    //etUrlInfo.setText(lugar.getEnlaceInformacion());
+                    if (lugar.getUrlfoto() != null) {
+                        if (!lugar.getUrlfoto().isEmpty()) {
+                            Glide.with(getActivity())
+                                    .load(lugar.getUrlfoto())
+                                    .into(ivFotoLugar);
+                        }
+                    }
                 }
             }
         });
     }
 
     public void grabarLugar(){
-        /* Añadir mediante mapas
-        Map<String, Object> map = new HashMap<>();
-        map.put("nombre", etNombre.getText().toString());
-        map.put("descripcion", etDecripcion.getText().toString());
-        map.put("tiempoVisita", etTiempoVisita.getText().toString());
-        map.put("urlFoto", etUrlFoto.getText().toString());
-
-         */
-        Lugares lugar = new Lugares();
         lugar.setNombre(etNombre.getText().toString());
         lugar.setDescripcion(etDecripcion.getText().toString());
         lugar.setTiempoVisita(etTiempoVisita.getText().toString());
-        lugar.setUrlfoto(etUrlFoto.getText().toString());
         lugar.setLatitud(etLatitud.getText().toString());
         lugar.setLongitud(etLongitud.getText().toString());
-        //lugar.setArea(etUrlArea.getText().toString());
-        //lugar.setParking(etUrlParking.getText().toString());
-        //lugar.setEnlaceInformacion(etLongitud.getText().toString());
-
-
-
-        //mFirebaseFireStore.collection("Lugares").document(id).update(lugar).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-        mFirebaseFireStore.collection("Lugares").document(id).set(lugar);
-                /*
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(getActivity(), "El lugar se creo correctamente", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getActivity(), "Error al crear el lugar", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-                 */
+        if (uri != null) {
+            lugar.setUrlfoto(uri.toString());
+        }
+        else{
+            lugar.setUrlfoto(null);
+        }
+        mFirebaseFireStore.collection("Lugares").document(id).set(lugar)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getActivity(), "Lugar actualizado con exito", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "Fallo al actualizar", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
