@@ -57,7 +57,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
     @Override
     protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull Lugares lugar) {
         holder.mNombre.setText(lugar.getNombre());
-        holder.mTiempo.setText(lugar.getTiempoVisita() + "h");
+        //holder.mTiempo.setText(lugar.getTiempoVisita() + "h");
 
         if (lugar.getUrlfoto() != null) {
            if (!lugar.getUrlfoto().isEmpty()) {
@@ -155,7 +155,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mNombre;
-        public final TextView mTiempo;
+        //public final TextView mTiempo;
         public final ImageView mFoto, mCircle, mCheck;
         public ImageButton btnEditar;
         public ImageButton btnBorrar;
@@ -169,7 +169,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
 
             mView = itemView;
             mNombre = (TextView) mView.findViewById(R.id.textViewViaje);
-            mTiempo = (TextView) mView.findViewById(R.id.textViewTiempo);
+            //mTiempo = (TextView) mView.findViewById(R.id.textViewTiempo);
             mFoto = (ImageView) mView.findViewById(R.id.imageViewLugar);
             mCircle = (ImageView) mView.findViewById(R.id.imageCircle);
             mCheck = (ImageView) mView.findViewById(R.id.imageCheck);

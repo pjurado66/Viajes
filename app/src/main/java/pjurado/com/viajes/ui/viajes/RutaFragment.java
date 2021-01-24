@@ -25,12 +25,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.firebase.ui.auth.viewmodel.RequestCodes;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,6 +45,8 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import pjurado.com.viajes.R;
 import pjurado.com.viajes.modelo.Lugares;
 import pjurado.com.viajes.modelo.Viajes;
@@ -52,6 +56,10 @@ public class RutaFragment extends Fragment {
     private FirebaseFirestore mFirebaseFireStore;
     private LatLng sydney;
     private JSONObject jso;
+    private double lati;
+    private double longi;
+    private LatLngBounds.Builder constructor = new LatLngBounds.Builder();;
+
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -98,9 +106,8 @@ public class RutaFragment extends Fragment {
 
                 }
             });
+
             for (int i = 0; i < viaje.getIdLugares().size(); i++) {
-
-
                 String idLugar = viaje.getIdLugares().get(i).getId();
                 DocumentReference documentReference = mFirebaseFireStore.
                         collection("Lugares").document(idLugar);
@@ -117,7 +124,17 @@ public class RutaFragment extends Fragment {
                                     Double lon = Double.parseDouble(lugar.getLongitud());
                                     sydney = new LatLng(lat, lon);
                                     googleMap.addMarker(new MarkerOptions().position(sydney).title(lugar.getNombre()));
+                                    constructor.include(sydney);
+                                    //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 8.0f));
+                                    LatLngBounds limites = constructor.build();
+                                    int ancho = getResources().getDisplayMetrics().widthPixels;
+                                    int alto = getResources().getDisplayMetrics().heightPixels;
+                                    int padding = (int) (alto * 0.25);
+                                    CameraUpdate centrarMarcadores = CameraUpdateFactory.newLatLngBounds(limites, ancho, alto, padding);
+                                    googleMap.animateCamera(centrarMarcadores);
                                 }
+
+
 
 
                             } else {
@@ -129,20 +146,22 @@ public class RutaFragment extends Fragment {
                     }
                 });
             }
+
+
+            //constructor.include(new LatLng(42.1353000, -0.4202950));
+
             //https://maps.googleapis.com/maps/api/directions/json?origin=parametroLatitud%2CparametroLongitud&destination=parametroLatitud%2CparametroLongitud&key=tu_key
             //https://maps.googleapis.com/maps/api/directions/json?origin=42.414709411031%2C0.14024643480909066&destination=0.14024643480909066%2C0.31520933662753364&key=AIzaSyAQhDJN01WwSb0blkfFY6cb6MTUEax2TAE
 
             //googleMap.animateCamera(CameraUpdateFactory.newLatLng(sydney));
             //googleMap.animateCamera(CameraUpdateFactory.zoomTo(10.f));
-            /*
+/*
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(42.414709411031, 0.14024643480909066))
-                    .zoom(14)
+                    .target(new LatLng(lati, longi))
+                    .zoom(10.f)
                     .build();
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-             */
-            /*
+*/               /*
             String url="https://maps.googleapis.com/maps/api/directions/json?origin=42.414709411031%2C0.14024643480909066&destination=0.14024643480909066%2C0.31520933662753364&key=AIzaSyAQhDJN01WwSb0blkfFY6cb6MTUEax2TAE";
             RequestQueue queue = Volley.newRequestQueue(getActivity());
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

@@ -118,7 +118,7 @@ public class VerLugarFragment extends Fragment {
         btnAreaBorra = view.findViewById(R.id.imageButtonAreaBorra);
         btnParkingBorra = view.findViewById(R.id.imageButtonParkingBorra);
         btnInfoBorra = view.findViewById(R.id.imageButtonInfoBorra);
-        btnAreaBorra.setEnabled(false);
+
 
         mFirebaseFireStore= FirebaseFirestore.getInstance();
 
@@ -161,6 +161,27 @@ public class VerLugarFragment extends Fragment {
             }
         });
 
+        btnAreaBorra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (areaSeleccionada > -1){
+                    areas.remove(areaSeleccionada);
+                    titulosAreas.remove(areaSeleccionada);
+                    if (areas.size() > 0){
+                        areaSeleccionada = 0;
+                    }
+                    else{
+                        areaSeleccionada = -1;
+                        spnAreas.setPrompt("");
+                    }
+                    creaSpinnerAreas();
+                    DocumentReference docViaje = mFirebaseFireStore.collection("Lugares").document(id);
+                    docViaje.update("areas", lugar.getAreas());
+                }
+            }
+        });
+
+
         btnParking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +206,26 @@ public class VerLugarFragment extends Fragment {
                 }
             }
         });
+
+        btnParkingBorra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (parkingsSeleccionado > -1){
+                    parkings.remove(parkingsSeleccionado);
+                    titulosParkings.remove(parkingsSeleccionado);
+                    if (parkings.size() > 0){
+                        parkingsSeleccionado = 0;
+                    }
+                    else{
+                        parkingsSeleccionado = -1;
+                    }
+                    creaSpinnerParkings();
+                    DocumentReference docViaje = mFirebaseFireStore.collection("Lugares").document(id);
+                    docViaje.update("parking", lugar.getParking());
+                }
+            }
+        });
+
         btnInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,50 +237,28 @@ public class VerLugarFragment extends Fragment {
             }
         });
 
-        btnAreaBorra.setOnClickListener(new View.OnClickListener() {
+        btnInfoBorra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (areaSeleccionada > -1){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                    builder.setMessage("¿Esta seguro de borrar el área seleccionada?")
-                            .setTitle("Borrar lugar");
-                    // Add the buttons
-                    builder.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int idDialog) {
-                            // User clicked OK button
-                            lugar.getAreas().remove(areaSeleccionada);
-                            DocumentReference docViaje = mFirebaseFireStore.collection("Lugares").document(id);
-                            docViaje.update("areas", lugar.getAreas());
-//                            areas.remove(areaSeleccionada);
-                            titulosAreas.remove(areaSeleccionada);
-
-                            if (titulosAreas.size() > -1){
-                                areaSeleccionada = 0;
-
-                            }
-                            else {
-                                areaSeleccionada = -1;
-
-                                //spnAreas
-                            }
-                        }
-                    });
-                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    // Set other dialog properties
-
-
-                    // Create the AlertDialog
-                    AlertDialog dialog = builder.create();
-                    builder.show();
+                if (infoSeleccionada > -1){
+                    infos.remove(infoSeleccionada);
+                    titulosInfo.remove(infoSeleccionada);
+                    if (infos.size() > 0){
+                        infoSeleccionada = 0;
+                    }
+                    else{
+                        infoSeleccionada = -1;
+                    }
+                    creaSpinnerInfos();
+                    DocumentReference docViaje = mFirebaseFireStore.collection("Lugares").document(id);
+                    docViaje.update("informacion", lugar.getInformacion());
                 }
             }
         });
+
     }
+
+
 
     public void recuperarDatosLugar(){
         mFirebaseFireStore.collection("Lugares").document(id).get().

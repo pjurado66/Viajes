@@ -92,20 +92,19 @@ public class LugaresViajeRecyclerViewAdapter
                     //
                     holder.ivCheck.setVisibility(View.VISIBLE);
 
-
                     PosicionLugarEnViaje lugarvisitar = new PosicionLugarEnViaje();
                     lugarvisitar.setId(id);
                     lugarvisitar.setPosicion(listaLugares.size());
                     listaLugares.add(lugarvisitar);
-
-
-
+                    DocumentReference docLugar = mFirebaseFireStore.collection("Lugares").document(id);
+                    docLugar.update("viaje", idViaje);
 
                 }
                 else{
                     holder.ivCheck.setVisibility(View.INVISIBLE);
                     listaLugares.remove(posLugar);
-
+                    DocumentReference docLugar = mFirebaseFireStore.collection("Lugares").document(id);
+                    docLugar.update("viaje", null);
                 }
 
                 DocumentReference docViaje = mFirebaseFireStore.collection("Viajes").document(idViaje);

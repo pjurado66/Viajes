@@ -203,9 +203,9 @@ public class EditarLugarFragment extends Fragment {
         if (uri != null) {
             lugar.setUrlfoto(uri.toString());
         }
-        else{
-            lugar.setUrlfoto(null);
-        }
+        //else{
+         //   lugar.setUrlfoto(null);
+        //}
         mFirebaseFireStore.collection("Lugares").document(id).set(lugar)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

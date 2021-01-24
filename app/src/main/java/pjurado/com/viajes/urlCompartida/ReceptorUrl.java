@@ -56,9 +56,9 @@ public class ReceptorUrl extends AppCompatActivity {
     private String idLugarSeleccionado;
     private int tipoSeleccionado;
 
-    private final static ArrayList<String> nombreViajes = new ArrayList<>();
+    private ArrayList<String> nombreViajes = new ArrayList<>();
     private ArrayList<String> idViajes = new ArrayList<>();
-    private final static ArrayList<String> nombreLugares = new ArrayList<>();
+    private ArrayList<String> nombreLugares = new ArrayList<>();
     private ArrayList<String> idLugares = new ArrayList<>();
     private final static String[] tipos = { "Área", "Parking", "Información" };
 
@@ -184,9 +184,20 @@ public class ReceptorUrl extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 final Viajes viaje = documentSnapshot.toObject(Viajes.class);
                 for (int i=0; i<viaje.getIdLugares().size(); i++){
-                    idLugares.add(viaje.getIdLugares().get(i).getId());
+                    //idLugares.add(viaje.getIdLugares().get(i).getId());
                     miFirebase.collection("Lugares").document(viaje.getIdLugares().get(i).getId())
-                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            idLugares.add(documentSnapshot.getId());
+                            Lugares lugar = documentSnapshot.toObject(Lugares.class);
+                            nombreLugares.add(lugar.getNombre());
+                            if (viaje.getIdLugares().size() == nombreLugares.size()) {creaSpinnerLugares();}
+                        }
+                    });
+                            /*
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             Lugares lugar = documentSnapshot.toObject(Lugares.class);
@@ -194,6 +205,8 @@ public class ReceptorUrl extends AppCompatActivity {
                             if (viaje.getIdLugares().size() == nombreLugares.size()) {creaSpinnerLugares();}
                         }
                     });
+
+                             */
                 }
 
             }
@@ -203,11 +216,54 @@ public class ReceptorUrl extends AppCompatActivity {
 
     private void guardar() {
         miFirebase.collection("Lugares").document(idLugarSeleccionado)
-            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document =  task.getResult();
+                        Lugares lugar = document.toObject(Lugares.class);
+                        DocumentReference docViaje= document.getReference();
+                        //DocumentReference docViaje = miFirebase.collection("Lugares").document(idLugarSeleccionado);
+                        switch (tipoSeleccionado) {
+                            case 0:
+                                lugar.getAreas().add(areaParking);
+                                docViaje.update("areas", lugar.getAreas());
+                                break;
+                            case 1:
+                                lugar.getParking().add(areaParking);
+                                docViaje.update("parking", lugar.getParking());
+                                break;
+                            case 2:
+                                //lugar.getInformacion().add(urlCompartido);
+                                lugar.getInformacion().add(areaParking);
+                                docViaje.update("informacion", lugar.getInformacion()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("Informacion", "DocumentSnapshot successfully updated!");
+                                    }
+                                })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d("Informacion", "Error updating document", e);
+                                            }
+                                        });
+                                break;
+                        }
+                        if (checkBox.isChecked()){
+                            docViaje.update("latitud", lat);
+                            docViaje.update("longitud", lon);
+                        }
+
+                    }
+            }});
+                /*addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Lugares lugar = documentSnapshot.toObject(Lugares.class);
-                DocumentReference docViaje = miFirebase.collection("Lugares").document(idLugarSeleccionado);
+                DocumentReference docViaje=documentSnapshot.getReference();
+                //DocumentReference docViaje = miFirebase.collection("Lugares").document(idLugarSeleccionado);
                 switch (tipoSeleccionado) {
                     case 0:
                         lugar.getAreas().add(areaParking);
@@ -220,7 +276,18 @@ public class ReceptorUrl extends AppCompatActivity {
                     case 2:
                         //lugar.getInformacion().add(urlCompartido);
                         lugar.getInformacion().add(areaParking);
-                        docViaje.update("informacion", lugar.getInformacion());
+                        docViaje.update("informacion", lugar.getInformacion()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Informacion", "DocumentSnapshot successfully updated!");
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("Informacion", "Error updating document", e);
+                                }
+                            });
                         break;
                 }
                 if (checkBox.isChecked()){
@@ -231,6 +298,8 @@ public class ReceptorUrl extends AppCompatActivity {
 
             }
         });
+
+                 */
     }
 
 
@@ -339,7 +408,7 @@ public class ReceptorUrl extends AppCompatActivity {
             Log.d("GPS", lat);
             texto = texto.substring(texto.indexOf(",")+1);
 
-            lon = texto.substring(0, texto.indexOf(" "));
+            lon = texto.substring(1, texto.indexOf("A")-1);
 
             Log.d("GPS", lon);
         }
