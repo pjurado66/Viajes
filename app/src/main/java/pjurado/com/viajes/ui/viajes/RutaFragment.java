@@ -80,25 +80,12 @@ public class RutaFragment extends Fragment {
             googleMap.getUiSettings().setZoomControlsEnabled(true);
             //googleMap.getUiSettings().setMapToolbarEnabled(true);
             progressBar.setVisibility(View.VISIBLE);
+
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(getActivity(), "Sin permisos", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            }
-            else{
-                Toast.makeText(getActivity(), "Permisos recibidos", Toast.LENGTH_SHORT).show();
-            }
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(getActivity(), "Sin permisos", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-            else{
-                Toast.makeText(getActivity(), "Permisos recibidos", Toast.LENGTH_SHORT).show();
-            }
+                    != PackageManager.PERMISSION_GRANTED) {
 
-
-            googleMap.setMyLocationEnabled(true);
+                googleMap.setMyLocationEnabled(true);
+            }
             googleMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                 @Override
                 public void onMyLocationChange(Location location) {

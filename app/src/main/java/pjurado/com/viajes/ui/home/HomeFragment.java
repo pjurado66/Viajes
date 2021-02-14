@@ -207,14 +207,15 @@ public class HomeFragment extends Fragment {
         title.add("Coordenadas de lugar");
         content.add("Al añadir áreas o parkings desde la app Park4night, se pueden añadir esas coordenadas como coordenadas del lugar");
         title.add("Rutas y recorrido");
-        content.add("Para generar rutas o recorridos todos los lugares del viaje tienen que tener coordenadas");
+        content.add("Para generar rutas o recorridos, todos los lugares del viaje tienen que tener coordenadas");
         title.add("Añadir lugares a viajes");
         content.add("Para añadir o quitar lugares de un viaje se hará con una pulsación larga");
         title.add("Ordenar Viaje");
         content.add("Se puede cambiar el orden de visita arrastrando los lugares");
         title.add("Inicio y fin de ruta");
         content.add("En settings se pueden añadir coordenadas de origen y final del viaje.");
-
+        title.add("Compartir");
+        content.add("Puedes compartir lugares y viajes con otros usuarios");
 
 
         for (int i = title.size(); i <= gallery.size(); i++){

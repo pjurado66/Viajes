@@ -93,7 +93,7 @@ public class RecorridoPDF {
         //addParagraph(parrafo);
         createTable(header, recorrido);
         closeDocument();
-        Toast.makeText(context, "PDF Creado", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "PDF Creado\n" + pdfFile, Toast.LENGTH_LONG).show();
         //viewPdf();
     }
 

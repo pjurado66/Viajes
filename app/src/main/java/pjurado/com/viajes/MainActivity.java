@@ -1,9 +1,11 @@
 package pjurado.com.viajes;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +34,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         //actualizalugares();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        permisos();
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.hide();
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +114,25 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("email", email);
         Log.d("Grabo", email);
         editor.commit();
+    }
+
+    private void permisos() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            //Toast.makeText(this, "Sin permisos", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+        else{
+            //Toast.makeText(this, "Permisos recibidos", Toast.LENGTH_SHORT).show();
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            //Toast.makeText(this, "Sin permisos", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        else{
+            //Toast.makeText(this, "Permisos recibidos", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
