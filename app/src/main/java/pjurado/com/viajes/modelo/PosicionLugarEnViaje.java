@@ -27,4 +27,5 @@ public class PosicionLugarEnViaje {
     public void setPosicion(int posicion) {
         this.posicion = posicion;
     }
+
 }

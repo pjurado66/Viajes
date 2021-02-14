@@ -1,9 +1,12 @@
 package pjurado.com.viajes;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -22,9 +27,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -33,6 +41,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import pjurado.com.viajes.modelo.AreasyParkings;
@@ -46,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //actualizalugares();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -137,16 +146,7 @@ public class MainActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-/*
-    private void modificaPerfil() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-        navController.navigate(R.id.nav_perfil);
 
-    }
-*/
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -155,41 +155,39 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void grabarLugar(){
+    public void actualizalugares(){
+        final FirebaseFirestore mFirebaseFireStore= FirebaseFirestore.getInstance();
+        mFirebaseFireStore.collection("Lugares").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for(QueryDocumentSnapshot document: task.getResult()){
 
-        Lugares lugar = new Lugares();
-        lugar.setNombre("pru");
-        lugar.setDescripcion("");
-        lugar.setTiempoVisita("1");
+                                DocumentReference ref = mFirebaseFireStore.collection("Lugares").document(document.getId());
+                                ArrayList<String> usuarios = new ArrayList<>();
+                                usuarios.add("pjolid@gmail.com");
+                                ref.update("usuarios", usuarios);
+                            }
+                        }
+                    }
+                });
+    }
 
-        lugar.setLatitud("");
-        lugar.setLongitud("");
-        lugar.setAreas(new ArrayList<AreasyParkings>());
-        lugar.setInformacion(new ArrayList<AreasyParkings>());
-        lugar.setParking(new ArrayList<AreasyParkings>());
-        lugar.setUrlfoto(null);
-
-
-
-        //lugar.setArea(etUrlArea.getText().toString());
-        //lugar.setParking(etUrlParking.getText().toString());
-        //lugar.setEnlaceInformacion(etLongitud.getText().toString());
-
-        //Alternativa
-        //mFirebaseFireStore.collection("Lugares").document().set(map);
-        FirebaseFirestore mFirebaseFireStore = FirebaseFirestore.getInstance();
-        mFirebaseFireStore.collection("Lugares").add(lugar).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                //Toast.makeText(getActivity(), "El lugar se creo correctamente", Toast.LENGTH_SHORT).show();
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == 0
+                && resultCode == RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                // Perform operations on the document using its URI.
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //Toast.makeText(getActivity(), "Error al crear el lugar", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
     }
 
 

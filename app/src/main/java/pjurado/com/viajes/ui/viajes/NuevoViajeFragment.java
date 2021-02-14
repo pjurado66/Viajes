@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,11 +52,12 @@ public class NuevoViajeFragment extends Fragment {
     private EditText etNombreNuevoViaje;
     private EditText etDescripcionNuevoViaje;
     private ImageView iVFotoNuevoViaje;
-    private ImageButton btnSalvar;
+    private ImageView btnSalvar;
+    private ImageView btnVolver;
     FirebaseFirestore mFirebaseFireStore;
     private Uri uriImagen;
     private Uri uri;
-
+    private FirebaseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -99,10 +102,12 @@ public class NuevoViajeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
         // Inflate the layout for this fragment
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.hide();
-        //fab.setImageResource(R.drawable.grabar);
+
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Nuevo viaje");
 
         return inflater.inflate(R.layout.fragment_nuevo_viaje, container, false);
@@ -121,6 +126,9 @@ public class NuevoViajeFragment extends Fragment {
         }
 
         viaje.setIdLugares(new ArrayList<PosicionLugarEnViaje>());
+        ArrayList<String> usuarios = new ArrayList<>();
+        usuarios.add(user.getEmail().toString());
+        viaje.setUsuarios(usuarios);
 
         mFirebaseFireStore= FirebaseFirestore.getInstance();
         mFirebaseFireStore.collection("Viajes").add(viaje).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -187,8 +195,8 @@ public class NuevoViajeFragment extends Fragment {
         etNombreNuevoViaje = view.findViewById(R.id.editTextTituloViaje);
         etDescripcionNuevoViaje = view.findViewById(R.id.editTextDescripcionViaje);
         iVFotoNuevoViaje = view.findViewById(R.id.imageViewFotoViaje);
-        btnSalvar = view.findViewById(R.id.imageButtonSalvarViaje);
-
+        btnSalvar = view.findViewById(R.id.imageViewNuevoViajeSalvar);
+        btnVolver = view.findViewById(R.id.imageViewNuevoViajeVolver);
         mFirebaseFireStore= FirebaseFirestore.getInstance();
 
         iVFotoNuevoViaje.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +216,13 @@ public class NuevoViajeFragment extends Fragment {
                 else {
                     grabarViaje();
                 }
+                Navigation.findNavController(v).navigate(R.id.viajesFragment);
+            }
+        });
+
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.viajesFragment);
             }
         });

@@ -103,5 +103,15 @@
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ver" />
 
+        <ImageButton
+            android:id="@+id/imageButtonCompartirLugar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonVer"
+            app:layout_constraintTop_toTopOf="@+id/imageButtonVer"
+            app:srcCompat="@drawable/compartir" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

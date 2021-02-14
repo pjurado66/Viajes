@@ -113,6 +113,9 @@
         <action
             android:id="@+id/action_viajesFragment_to_rutaFragment"
             app:destination="@id/rutaFragment" />
+        <action
+            android:id="@+id/action_viajesFragment_to_recorridoFragment"
+            app:destination="@id/recorridoFragment" />
     </fragment>
     <fragment
         android:id="@+id/lugaresViajeFragment"
@@ -131,6 +134,9 @@
         <action
             android:id="@+id/action_ordenarLugaresViajeFragment_to_viajesFragment"
             app:destination="@id/viajesFragment" />
+        <action
+            android:id="@+id/action_ordenarLugaresViajeFragment_to_rutaFragment"
+            app:destination="@id/rutaFragment" />
     </fragment>
     <fragment
         android:id="@+id/rutaFragment"
@@ -141,4 +147,34 @@
             android:id="@+id/action_rutaFragment_to_viajesFragment"
             app:destination="@id/viajesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/recorridoFragment"
+        android:name="pjurado.com.viajes.RecorridoFragment"
+        android:label="fragment_item_recorrido_list"
+        tools:layout="@layout/fragment_item_recorrido_list" >
+        <action
+            android:id="@+id/action_recorridoFragment_to_viajesFragment"
+            app:destination="@id/viajesFragment" />
+        <action
+            android:id="@+id/action_recorridoFragment_to_rutaFragment"
+            app:destination="@id/rutaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editarViajeFragment"
+        android:name="pjurado.com.viajes.ui.viajes.EditarViajeFragment"
+        android:label="Editar viaje"
+        tools:layout="@layout/fragment_editar_viaje" >
+        <action
+            android:id="@+id/action_editarViajeFragment_to_viajesFragment"
+            app:destination="@id/viajesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="pjurado.com.viajes.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+
 </navigation>

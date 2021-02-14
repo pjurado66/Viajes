@@ -11,9 +11,19 @@ public class Lugares {
     private String latitud;
     private String longitud;
     private ArrayList<AreasyParkings> areas;
+
+    public ArrayList<String> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(ArrayList<String> usuarios) {
+        this.usuarios = usuarios;
+    }
+
     private ArrayList<AreasyParkings> parking;
     private ArrayList<AreasyParkings> informacion;
     private String viaje;
+    private ArrayList<String> usuarios;
 
 
     public Lugares() {

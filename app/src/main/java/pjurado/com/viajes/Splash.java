@@ -1,12 +1,24 @@
 package pjurado.com.viajes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import pjurado.com.viajes.modelo.Lugares;
 
 public class Splash extends AppCompatActivity {
 
@@ -15,6 +27,7 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
+
     }
 
     @Override
@@ -29,4 +42,6 @@ public class Splash extends AppCompatActivity {
          }
      }, 4000);
     }
+
+
 }

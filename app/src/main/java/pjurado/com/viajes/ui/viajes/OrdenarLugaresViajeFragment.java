@@ -5,18 +5,26 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -111,6 +119,10 @@ public class OrdenarLugaresViajeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ordenar_lugares_viaje, container, false);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.hide();
+        setHasOptionsMenu(true);
+
         idViaje = getArguments().getString("Id");
         viaje = (Viajes) getArguments().getSerializable("Viaje");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Ordenar lugares del viaje a "+ viaje.getNombre());
@@ -136,7 +148,28 @@ public class OrdenarLugaresViajeFragment extends Fragment {
 
         return view;
     }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_mapa_recorrido,menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.paraRutaFragment){
+            Bundle idViaje = new Bundle();
+            idViaje.putSerializable("Viaje", viaje);
+
+
+            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+            NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
+            //NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+            NavigationUI.setupWithNavController(navigationView, navController);
+            navController.navigate(R.id.rutaFragment, idViaje);
+        }
+        return super.onOptionsItemSelected(item);
+    }
     private void loadSwipe() {
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP |ItemTouchHelper.DOWN, 0) {
 

@@ -31,6 +31,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -54,19 +56,10 @@ public class LugaresFragment extends Fragment {
     private CharSequence[] nombreViajes;
 
     private ArrayList<String> idViajes = new ArrayList<>();
-    /*public void setLugaresViewModel(LugaresViewModel listalugares) {
-            lugaresViewModel = listalugares;
-        }
-    */
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-/*
-        lugaresViewModel =
-                ViewModelProviders.of(this).get(LugaresViewModel.class);
-        lugaresViewModel.getLugaresList();
-
- */
 
         View root = inflater.inflate(R.layout.fragment_lugares, container, false);
         //getActivity().getActionBar().setTitle("Nuevo lugar");
@@ -74,20 +67,19 @@ public class LugaresFragment extends Fragment {
 
         if (root instanceof RecyclerView) {
             Context context = root.getContext();
-
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
              rvLugares = (RecyclerView) root;
             rvLugares.setLayoutManager(new LinearLayoutManager(context));
 
             miFirebase= FirebaseFirestore.getInstance();
 
-            Query query = miFirebase.collection("Lugares").orderBy("nombre");
+            Query query = miFirebase.collection("Lugares")
+                    .whereArrayContains("usuarios", user.getEmail().toString())
+                    .orderBy("nombre");
             FirestoreRecyclerOptions<Lugares> firestoreRecyclerOptions =
                     new FirestoreRecyclerOptions.Builder<Lugares>()
                     .setQuery(query, Lugares.class)
                     .build();
-
-
-
 
             adapter = new LugaresRecyclerViewAdapter(getActivity(), firestoreRecyclerOptions);
             adapter.notifyDataSetChanged();
@@ -174,12 +166,12 @@ public class LugaresFragment extends Fragment {
         builder.setTitle("Selecciona Viaje");
 // add a radio button list
 
-        final int checkedItem = 0; // cow
-        builder.setSingleChoiceItems(nombreViajes, checkedItem, new DialogInterface.OnClickListener() {
+        final int[] checkedItem = {0}; // cow
+        builder.setSingleChoiceItems(nombreViajes, checkedItem[0], new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // user checked an item
-
+                checkedItem[0] = which;
             }
         });
 // add OK and Cancel buttons
@@ -187,7 +179,12 @@ public class LugaresFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // user clicked OK
-                filtraPorViaje(idViajes.get(checkedItem));
+                if (nombreViajes[checkedItem[0]] == "Sin viaje"){
+                    filtraPorViaje("");
+                }
+                else {
+                    filtraPorViaje(idViajes.get(checkedItem[0]));
+                }
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -223,10 +220,12 @@ public class LugaresFragment extends Fragment {
                     viajeslista.add(viaje.getNombre());
                     idViajes.add(document.getId());
                 }
-                nombreViajes = new CharSequence[viajeslista.size()];
-                for (int i = 0; i<viajeslista.size(); i++){
+                nombreViajes = new CharSequence[viajeslista.size()+1];
+                int i;
+                for (i = 0; i<viajeslista.size(); i++){
                     nombreViajes[i] = viajeslista.get(i);
                 }
+                nombreViajes[i] = "Sin viaje";
                 dialogEscogerViaje();
                 //creaSpinnerLugares();
             } else {

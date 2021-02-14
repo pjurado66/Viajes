@@ -24,6 +24,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,7 +52,9 @@ public class NuevoLugarFragment extends Fragment {
     private TextView etUrlParking;
     private TextView etUrlInfo;
     private ImageButton btMapa;
-    private ImageButton btSalvar;
+    private ImageView btSalvar;
+    private ImageView btVolver;
+
     FirebaseFirestore mFirebaseFireStore;
     private Uri uriImagen;
     private Uri uri;
@@ -80,15 +84,16 @@ public class NuevoLugarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        etNombre = (TextView) view.findViewById(R.id.texttViewVerLugarNombre);
-        etDecripcion = (TextView) view.findViewById(R.id.texttViewVerLugarDescripcion);
+        etNombre = (TextView) view.findViewById(R.id.texttViewEditarViajeNombre);
+        etDecripcion = (TextView) view.findViewById(R.id.texttViewEditarViajeDescripcion);
         etTiempoVisita = (TextView) view.findViewById(R.id.editTextEditarLugarTiempoVisita);
 
         ivFotoLugar = (ImageView) view.findViewById(R.id.imageViewNuevoLugarFoto);
         etLatitud= (TextView) view.findViewById(R.id.editTextLatitud);
         etLongitud = (TextView) view.findViewById(R.id.editTextLongitud);
         btMapa = (ImageButton) view.findViewById(R.id.imageButtonMapa);
-        btSalvar = (ImageButton) view.findViewById(R.id.imageButtonNuevoLugarSalvar);
+        btSalvar = (ImageView) view.findViewById(R.id.imageButtonNuevoLugarSalvar);
+        btVolver = (ImageView) view.findViewById(R.id.imageViewNuevoLugarVolver);
 
         mFirebaseFireStore= FirebaseFirestore.getInstance();
 
@@ -113,6 +118,12 @@ public class NuevoLugarFragment extends Fragment {
             }
         });
 
+        btVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.nav_gallery);
+            }
+        });
 
         btSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +199,11 @@ public class NuevoLugarFragment extends Fragment {
         lugar.setAreas(new ArrayList<AreasyParkings>());
         lugar.setInformacion(new ArrayList<AreasyParkings>());
         lugar.setParking(new ArrayList<AreasyParkings>());
+        lugar.setViaje("");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        ArrayList<String> usuarios = new ArrayList<>();
+        usuarios.add(user.getEmail().toString());
+        lugar.setUsuarios(usuarios);
 
 
         if (uri != null) {
@@ -196,7 +212,6 @@ public class NuevoLugarFragment extends Fragment {
         else{
             lugar.setUrlfoto(null);
         }
-
 
         mFirebaseFireStore.collection("Lugares").add(lugar).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

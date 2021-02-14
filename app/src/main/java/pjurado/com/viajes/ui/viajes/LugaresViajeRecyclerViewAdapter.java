@@ -19,8 +19,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -67,7 +69,7 @@ public class LugaresViajeRecyclerViewAdapter
 
 
     @Override
-    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull Lugares model) {
+    protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Lugares model) {
         DocumentSnapshot lugarDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
         final String id = lugarDocument.getId();
 
@@ -83,31 +85,55 @@ public class LugaresViajeRecyclerViewAdapter
         if (isLugarEnViaje(id) >= 0){
             holder.ivCheck.setVisibility(View.VISIBLE);
         }
+        else {
+            holder.ivCheck.setVisibility(View.INVISIBLE);
+        }
 
         holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 int posLugar = isLugarEnViaje(id);
+                DocumentReference docViaje = mFirebaseFireStore.collection("Viajes").document(idViaje);
+
                 if ( posLugar <  0) {
                     //
                     holder.ivCheck.setVisibility(View.VISIBLE);
+                    //Añade id del viaje al lugar
 
                     PosicionLugarEnViaje lugarvisitar = new PosicionLugarEnViaje();
                     lugarvisitar.setId(id);
                     lugarvisitar.setPosicion(listaLugares.size());
                     listaLugares.add(lugarvisitar);
-                    DocumentReference docLugar = mFirebaseFireStore.collection("Lugares").document(id);
+                    final DocumentReference docLugar = mFirebaseFireStore.collection("Lugares").
+                            document(id);
                     docLugar.update("viaje", idViaje);
 
+                    docViaje.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                final Viajes viaje = documentSnapshot.toObject(Viajes.class);
+//----------Hay que añadirle usuarios del viaje ----------------
+                                for (int i = 0; i < model.getUsuarios().size(); i++){
+                                    model.getUsuarios().remove(0);
+                                }
+                                for (int i = 0; i < viaje.getUsuarios().size(); i++){
+                                    model.getUsuarios().add(viaje.getUsuarios().get(i));
+                                }
+                                docLugar.update("usuarios", model.getUsuarios());
+                            }
+                        }
+                    });
                 }
                 else{
                     holder.ivCheck.setVisibility(View.INVISIBLE);
                     listaLugares.remove(posLugar);
                     DocumentReference docLugar = mFirebaseFireStore.collection("Lugares").document(id);
-                    docLugar.update("viaje", null);
+                    docLugar.update("viaje", "");
                 }
 
-                DocumentReference docViaje = mFirebaseFireStore.collection("Viajes").document(idViaje);
+
                 docViaje.update("idLugares", listaLugares)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -155,33 +181,15 @@ public class LugaresViajeRecyclerViewAdapter
         }
 
     }
-//Cambiada por tarea asíncrona
-    /*
-    public boolean recuperarDatosViaje(){
-        Log.d("IDs", "Busco viaje" + idViaje);
-        mFirebaseFireStore.collection("Viajes").document(idViaje).get().
-                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Log.d("IDs", "Lo encuentro");
-                if (documentSnapshot.exists()){
-                        viaje = documentSnapshot.toObject(Viajes.class);
-                        listaLugares = viaje.getIdLugares();
-                    Log.d("IDs", "Asigno " + listaLugares.size() + " Lugares");
-                }
-            }
-        });
-        return true;
-    }
 
-     */
 
     public int isLugarEnViaje(String id){
 
         Log.d("IDs", "Comprobando " + id + " Registros "+listaLugares.size());
         for (int i=0; i < listaLugares.size(); i++){
-            Log.d("IDs", listaLugares.get(i).getId() + " -- " + id);
+
             if (listaLugares.get(i).getId().equals(id)){
+                Log.d("IDs", listaLugares.get(i).getId() + " -- " + id);
                 Log.d("IDs", "igual");
                 return i;
             }

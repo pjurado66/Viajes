@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,14 +25,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import pjurado.com.viajes.R;
 import pjurado.com.viajes.modelo.Lugares;
+import pjurado.com.viajes.modelo.Viajes;
 
 public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares, LugaresRecyclerViewAdapter.ViewHolder> {
 
@@ -67,7 +72,14 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
            }
         }
 
-
+        holder.btnCompartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DocumentSnapshot lugarDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
+                final String id = lugarDocument.getId();
+                comparteUsuario(id);
+            }
+        });
         holder.btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,15 +106,39 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
                 builder.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK button
-                        FirebaseFirestore mFirebaseFireStore= FirebaseFirestore.getInstance();
+                        final FirebaseFirestore mFirebaseFireStore= FirebaseFirestore.getInstance();
                         DocumentSnapshot lugarDocument = getSnapshots().getSnapshot(holder.getAdapterPosition());
                         final String id_borrar = lugarDocument.getId();
+                        final String idViaje = (lugarDocument.toObject(Lugares.class)).getViaje();
                         mFirebaseFireStore.collection("Lugares").document(id_borrar)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Toast.makeText(frAct, "Lugar Borrado", Toast.LENGTH_SHORT).show();
+                                        if (!idViaje.isEmpty()) {
+                                            final DocumentReference documentReference =
+                                                    mFirebaseFireStore.collection("Viajes").document(idViaje);
+                                            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                                    Viajes viaje = documentSnapshot.toObject(Viajes.class);
+                                                    int pos = -1;
+                                                    for (int i = 0; i < viaje.getIdLugares().size(); i++) {
+                                                        if (viaje.getIdLugares().get(i).getId().equals(id_borrar)) {
+                                                            pos = i;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (pos != -1) {
+                                                        viaje.getIdLugares().remove(pos);
+                                                        documentReference.update("idLugares", viaje.getIdLugares());
+                                                    }
+                                                }
+                                            });
+
+                                        }
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -146,12 +182,55 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
             }
         });
     }
-/*
-    @Override
-    public int getItemCount() {
-        return lugaresList.size();
+
+    private void comparteUsuario(final String idLugar) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(frAct);
+        // Get the layout inflater
+        LayoutInflater inflater = (LayoutInflater) frAct.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        final View customdialog = inflater.inflate(R.layout.dialogo_usuario, null);
+                //frAct.requireActivity().getLayoutInflater();
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(customdialog)
+                // Add action buttons
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                        final EditText emailuser = customdialog.findViewById(R.id.username);
+                        final FirebaseFirestore mFirebaseFireStore= FirebaseFirestore.getInstance();
+
+                        final DocumentReference ref = mFirebaseFireStore.collection("Lugares").document(idLugar);
+                        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    final Lugares lugar = documentSnapshot.toObject(Lugares.class);
+                                    lugar.getUsuarios().add(emailuser.getText().toString());
+                                    ref.update("usuarios", lugar.getUsuarios());
+                                    }
+                                }
+
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //LoginDialogFragment.this.getDialog().cancel();
+                    }
+                });
+        builder.create();
+        builder.show();
     }
-*/
+
+    /*
+        @Override
+        public int getItemCount() {
+            return lugaresList.size();
+        }
+    */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mNombre;
@@ -160,6 +239,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
         public ImageButton btnEditar;
         public ImageButton btnBorrar;
         public ImageButton btnVer;
+        public ImageButton btnCompartir;
         public Lugares mItem;
 
 
@@ -176,6 +256,7 @@ public class LugaresRecyclerViewAdapter extends FirestoreRecyclerAdapter<Lugares
             btnEditar = mView.findViewById(R.id.imageButtonEditar);
             btnBorrar = mView.findViewById(R.id.imageButtonBorrar);
             btnVer = mView.findViewById(R.id.imageButtonVer);
+            btnCompartir = mView.findViewById(R.id.imageButtonCompartirLugar);
 
 
         }

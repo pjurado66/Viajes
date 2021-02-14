@@ -12,6 +12,16 @@ public class Viajes implements Serializable {
     private String urlfoto;
     private ArrayList<PosicionLugarEnViaje> idLugares;
 
+    public ArrayList<String> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(ArrayList<String> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    private ArrayList<String> usuarios;
+
 
     public ArrayList<PosicionLugarEnViaje> getIdLugares() {
         return idLugares;
@@ -47,6 +57,8 @@ public class Viajes implements Serializable {
     public void setUrlfoto(String urlfoto) {
         this.urlfoto = urlfoto;
     }
+
+
 
     public Viajes(String nombre, String descripcion, String urlfoto) {
         this.nombre = nombre;

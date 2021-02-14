@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/texttViewVerLugarNombre"
+            android:id="@+id/texttViewEditarViajeNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -47,7 +47,7 @@
                 android:scrollbars="vertical">
 
                 <TextView
-                    android:id="@+id/texttViewVerLugarDescripcion"
+                    android:id="@+id/texttViewEditarViajeDescripcion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -73,7 +73,7 @@
                     android:hint="Horas Visita"
                     android:inputType="number"
                     app:layout_constraintStart_toEndOf="@+id/textView"
-                    app:layout_constraintTop_toBottomOf="@+id/texttViewVerLugarDescripcion" />
+                    app:layout_constraintTop_toBottomOf="@+id/texttViewEditarViajeDescripcion" />
 
                 <ImageView
                     android:id="@+id/imageViewFoto"

@@ -42,7 +42,8 @@ public class EditarLugarFragment extends Fragment {
     private TextView etLongitud;
     private ImageView ivFotoLugar;
     private ImageButton btMapa;
-    private ImageButton btSalvar;
+    private ImageView btSalvar;
+    private ImageView btVolver;
     FirebaseFirestore mFirebaseFireStore;
     private String id;
     private Lugares lugar;
@@ -66,6 +67,7 @@ public class EditarLugarFragment extends Fragment {
         // Inflate the layout for this fragment
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.hide();
+        //getActivity().getActionBar().setTitle("Editar Viaje");
         id = getArguments().getString("Id");
         return inflater.inflate(R.layout.fragment_editar_lugar, container, false);
 
@@ -75,14 +77,15 @@ public class EditarLugarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        etNombre = (TextView) view.findViewById(R.id.texttViewVerLugarNombre);
-        etDecripcion = (TextView) view.findViewById(R.id.texttViewVerLugarDescripcion);
+        etNombre = (TextView) view.findViewById(R.id.texttViewEditarLugarNombre);
+        etDecripcion = (TextView) view.findViewById(R.id.texttViewEditarLugarDescripcion);
         etTiempoVisita = (TextView) view.findViewById(R.id.editTextEditarLugarTiempoVisita);
-        ivFotoLugar = (ImageView) view.findViewById(R.id.imageViewFotoLugar);
+        ivFotoLugar = (ImageView) view.findViewById(R.id.imageViewEditarViajeFoto);
         etLatitud= (TextView) view.findViewById(R.id.editTextLatitud);
         etLongitud = (TextView) view.findViewById(R.id.editTextLongitud);
         btMapa = (ImageButton) view.findViewById(R.id.imageButtonMapa);
-        btSalvar = (ImageButton) view.findViewById(R.id.imageButtonEditarLugarSalvar);
+        btSalvar =  view.findViewById(R.id.imageViewEditarLugarSalvar);
+        btVolver =  view.findViewById(R.id.imageViewEditarLugarVolver);
 
         mFirebaseFireStore= FirebaseFirestore.getInstance();
 
@@ -118,6 +121,13 @@ public class EditarLugarFragment extends Fragment {
                 else{
                     grabarLugar();
                 }
+                Navigation.findNavController(v).navigate(R.id.nav_gallery);
+            }
+        });
+
+        btVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Navigation.findNavController(v).navigate(R.id.nav_gallery);
             }
         });
@@ -200,6 +210,7 @@ public class EditarLugarFragment extends Fragment {
         lugar.setTiempoVisita(etTiempoVisita.getText().toString());
         lugar.setLatitud(etLatitud.getText().toString());
         lugar.setLongitud(etLongitud.getText().toString());
+
         if (uri != null) {
             lugar.setUrlfoto(uri.toString());
         }

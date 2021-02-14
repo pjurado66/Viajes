@@ -166,6 +166,8 @@ public class ReceptorUrl extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 idViajeSeleccionado = idViajes.get(position);
                 spnViajes.setSelection(position);
+                idLugares = new ArrayList<>();
+                nombreLugares = new ArrayList<>();
                 //Log.d("Spinner", nombreLugares.get(position));
                 llenarSpinnerLugares();
             }
@@ -179,7 +181,32 @@ public class ReceptorUrl extends AppCompatActivity {
 
     private void llenarSpinnerLugares() {
         miFirebase.collection("Viajes").document(idViajeSeleccionado)
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    final Viajes viaje = documentSnapshot.toObject(Viajes.class);
+                    for (int i=0; i<viaje.getIdLugares().size(); i++){
+                        //idLugares.add(viaje.getIdLugares().get(i).getId());
+                        miFirebase.collection("Lugares").document(viaje.getIdLugares().get(i).getId())
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                idLugares.add(documentSnapshot.getId());
+                                Lugares lugar = documentSnapshot.toObject(Lugares.class);
+                                nombreLugares.add(lugar.getNombre());
+                                if (viaje.getIdLugares().size() == nombreLugares.size()) {creaSpinnerLugares();}
+                            }
+                        });
+
+                    }
+                }
+            }
+        });
+             /*
+                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 final Viajes viaje = documentSnapshot.toObject(Viajes.class);
@@ -196,21 +223,13 @@ public class ReceptorUrl extends AppCompatActivity {
                             if (viaje.getIdLugares().size() == nombreLugares.size()) {creaSpinnerLugares();}
                         }
                     });
-                            /*
-                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            Lugares lugar = documentSnapshot.toObject(Lugares.class);
-                            nombreLugares.add(lugar.getNombre());
-                            if (viaje.getIdLugares().size() == nombreLugares.size()) {creaSpinnerLugares();}
-                        }
-                    });
 
-                             */
                 }
 
             }
         });
+
+              */
     }
 
 

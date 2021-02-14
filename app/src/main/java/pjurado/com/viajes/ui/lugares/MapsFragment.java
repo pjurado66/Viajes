@@ -20,7 +20,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -113,18 +115,15 @@ public class MapsFragment extends Fragment {
         longitud = getArguments().getString("Longitud");
         titulo = getArguments().getString("Titulo");
         id = getArguments().getString("Id");
-        recuperarDatosLugar();
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapRuta);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
-        }
+        recuperarDatosLugar();
+
     }
 
     @Override
@@ -135,17 +134,27 @@ public class MapsFragment extends Fragment {
 
     public void recuperarDatosLugar(){
         FirebaseFirestore mFirebaseFireStore = FirebaseFirestore.getInstance();
-        mFirebaseFireStore.collection("Lugares").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()){
-                    Lugares lugar = documentSnapshot.toObject(Lugares.class);
-                    areas = lugar.getAreas();
-                    parkings = lugar.getParking();
-                }
-            }
-        });
+        mFirebaseFireStore.collection("Lugares").document(id).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            Lugares lugar = documentSnapshot.toObject(Lugares.class);
+                            areas = lugar.getAreas();
+                            parkings = lugar.getParking();
+                            SupportMapFragment mapFragment =
+                                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapRuta);
+                            if (mapFragment != null) {
+                                mapFragment.getMapAsync(callback);
+                            }
+                        }
+                    }
+                });
+
+
     }
+
 
 
 }
